@@ -1,0 +1,10 @@
+[Unit]
+Description=SMB Share for {{ item.share_name }}
+ConditionPathExists={{ smb_mount_dir }}/{{ item.mount_point }}
+
+[Automount]
+Where={{ smb_mount_dir }}/{{ item.mount_point }}
+TimeoutIdleSec={{ automount_timeout }}
+
+[Install]
+WantedBy={{ mount_runlvl }}

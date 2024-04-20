@@ -1,0 +1,14 @@
+[Unit]
+Description=SMB Share for {{ item.share_name }}
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What=//{{ smb_server }}/{{ item.share_name }}
+Where={{ smb_mount_dir }}/{{ item.mount_point }}
+Type={{ mount_fstype }}
+Options=_netdev,{{ smb_perms }},uid={{ smb_uid }},gid={{ smb_gid }},iocharset={{ smb_charset }},credentials={{ path_etc }}/{{ file_smb_creds }},noserverino
+TimeoutSec={{ smb_timeout }}
+
+[Install]
+WantedBy={{ mount_runlvl }}

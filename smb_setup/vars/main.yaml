@@ -1,0 +1,18 @@
+---
+
+# vars for smb_setup
+path_etc: /etc
+path_systemd_unitfiles: /etc/systemd/system
+
+file_smb_creds: smb.cred
+
+dependencies_install:
+  - cifs-utils
+
+mountfile_ext: .mount
+automountfile_ext: .automount
+
+mount_fstype: cifs
+mount_runlvl: multi-user.target
+
+...

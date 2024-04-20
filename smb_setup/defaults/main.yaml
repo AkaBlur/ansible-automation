@@ -1,0 +1,22 @@
+---
+
+# defaults for smb_setup
+smb_user: user
+smb_pass: password
+
+smb_mount_dir: /media
+smb_server: 10.0.0.2
+smb_targets:
+  - { share_name: "library", mount_point: "library" }
+
+smb_uid: 1000
+smb_gid: 1000
+smb_perms: rw
+smb_charset: utf8
+smb_timeout: 30
+
+automount_timeout: 300
+
+reboot_timeout: 600
+
+...
