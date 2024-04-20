@@ -18,6 +18,4 @@ smb_timeout: 30
 
 automount_timeout: 300
 
-reboot_timeout: 600
-
 ...

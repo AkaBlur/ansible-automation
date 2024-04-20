@@ -70,10 +70,3 @@
     enabled: true
   loop: "{{ smb_targets }}"
   become: true
-
-- name: Reboot host
-  ansible.builtin.reboot:
-    msg: Ansible SMB setup. Rebooting...
-    pre_reboot_delay: 5
-    reboot_timeout: "{{ reboot_timeout }}"
-  become: true
