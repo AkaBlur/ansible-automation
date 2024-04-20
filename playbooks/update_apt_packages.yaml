@@ -1,0 +1,11 @@
+---
+
+- name: Update all apt packages
+  hosts: "{{ hosts }}"
+
+  tasks:
+    - name: Update apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
