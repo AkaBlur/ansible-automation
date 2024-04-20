@@ -4,7 +4,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Mount]
-What=//{{ smb_server }}/{{ item.share_name }}
+What=//{{ smb_server_name }}/{{ item.share_name }}
 Where={{ smb_mount_dir }}/{{ item.mount_point }}
 Type={{ mount_fstype }}
 Options=_netdev,{{ smb_perms }},uid={{ smb_uid }},gid={{ smb_gid }},iocharset={{ smb_charset }},credentials={{ path_etc }}/{{ file_smb_creds }},noserverino

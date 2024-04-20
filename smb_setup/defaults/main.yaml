@@ -5,7 +5,8 @@ smb_user: user
 smb_pass: password
 
 smb_mount_dir: /media
-smb_server: 10.0.0.2
+smb_server_ip: 10.0.0.2
+smb_server_name: FILES
 smb_targets:
   - { share_name: "library", mount_point: "library" }
 
