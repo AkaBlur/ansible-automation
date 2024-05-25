@@ -1,7 +1,7 @@
 ---
 
 - name: Update all apt packages
-  hosts: "{{ host_instances }}"
+  hosts: all
 
   tasks:
     - name: Update apt packages
