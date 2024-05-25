@@ -7,8 +7,8 @@
     - name: Update apt packages
       become: true
       apt:
-        upgrade: yes
         update_cache: yes
+        upgrade: yes
 
     - name: Check Reboot state
       become: true
