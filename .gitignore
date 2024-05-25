@@ -1,3 +1,5 @@
 .venv
 host_vars
+group_vars
 localdev
+hosts
