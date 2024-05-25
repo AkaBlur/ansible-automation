@@ -9,3 +9,18 @@
       apt:
         upgrade: yes
         update_cache: yes
+
+    - name: Check Reboot state
+      become: true
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Telegram Notification
+      community.general.telegram:
+        token: "{{ telegram_api_token }}"
+        api_args:
+          chat_id: "{{ telegram_chat_id }}"
+          parse_mode: "MarkdownV2"
+          text: "*Ansible*\nReboot required on:\n\t*{{ inventory_hostname }}*"
+      when: reboot_required.stat.exists
