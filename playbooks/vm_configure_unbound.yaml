@@ -3,8 +3,9 @@
 - name: Setup Unbound as recursive DNS resolver for hosts
   hosts: all
   tasks:
-    - name: Ping Hosts
-      ansible.builtin.ping:
-
   roles:
-    - l3d.unbound
+    - role: l3d.unbound
+      vars:
+        unbound_listen_addresses: [ "0.0.0.0" ]
+        unbound_access_control: "{{ unbound_access_allow }}"
+        submodule_versioncheck: true
