@@ -32,6 +32,7 @@
         src: /usr/share/dns/root.key
         dest: /var/lib/unbound/root.key
         mode: "0777"
+        remote_src: true
 
   roles:
     - role: l3d.unbound
