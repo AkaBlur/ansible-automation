@@ -1,4 +1,5 @@
 .venv
+format_test.json
 host_vars
 group_vars
 localdev
