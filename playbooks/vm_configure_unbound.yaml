@@ -1,33 +1,35 @@
 ---
 
 - name: Setup Unbound as recursive DNS resolver for hosts
+  become: true
   hosts: all
   pre_tasks:
     - name: Check services on host
-      become: true
       ansible.builtin.service_facts:
 
     - name: Check if systemd-resolve is stopped (binds port 53)
-      become: true
       ansible.builtin.systemd_service:
         name: systemd-resolved.service
         state: stopped
         enabled: false
       when: "'systemd-resolved.service' in services"
 
-    - name: Create lib directory for unbound to use
-      become: true
+    - name: Install DNS root.key trust anchor package for system
+      ansible.builtin.apt:
+        name: dns-root-data
+        state: present
+
+    - name: Create unbound lib directory for root.key
       ansible.builtin.file:
         path: /var/lib/unbound
         state: directory
         owner: root
         group: root
         mode: "0777"
-
-    - name: Copy system root trust anchor to new location
-      become: true
+    
+    - name: Copy trust anchor root.key for unbound
       ansible.builtin.copy:
-        src: "{{ unbound_system_trustanchor_key }}"
+        src: /usr/share/dns/root.key
         dest: /var/lib/unbound/root.key
         mode: "0777"
 
@@ -39,19 +41,16 @@
         submodule_versioncheck: true
 
   post_tasks:
-    - name: Change unbound lib ownership
-      become: true
-      ansible.builtin.file:
-        path: /var/lib/unbound
-        state: directory
-        owner: unbound
-        group: unbound
-        mode: "0755"
-      
-    - name: Change root.key ownership
-      become: true
+    - name: Chown for unbound trust anchor
       ansible.builtin.file:
         path: /var/lib/unbound/root.key
         owner: unbound
         group: unbound
         mode: "0644"
+      
+    - name: Chown for unbound lib directory
+      ansible.builtin.file:
+        path: /var/lib/unbound
+        owner: unbound
+        group: unbound
+        mode: "0755"
