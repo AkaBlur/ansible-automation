@@ -1,10 +1,7 @@
 ---
 
 - name: Setting up network shares for VM instances
-  hosts: all
-  tasks:
-    - name: Ping Host
-      ansible.builtin.ping:
+  hosts: "{{ vm_hosts }}"
 
   roles:
     - smb_setup
