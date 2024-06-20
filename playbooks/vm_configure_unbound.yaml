@@ -15,10 +15,43 @@
         enabled: false
       when: "'systemd-resolved.service' in services"
 
+    - name: Create lib directory for unbound to use
+      become: true
+      ansible.builtin.file:
+        path: /var/lib/unbound
+        state: directory
+        owner: root
+        group: root
+        mode: "0777"
+
+    - name: Copy system root trust anchor to new location
+      become: true
+      ansible.builtin.copy:
+        src: "{{ unbound_system_trustanchor_key }}"
+        dest: /var/lib/unbound/root.key
+        mode: "0777"
+
   roles:
     - role: l3d.unbound
       vars:
         unbound_listen_addresses: [ "0.0.0.0" ]
         unbound_access_control: "{{ unbound_access_allow }}"
         submodule_versioncheck: true
-        unbound__auto_trust_anchor_file: "/usr/share/dns/root.key"
+
+  post_tasks:
+    - name: Change unbound lib ownership
+      become: true
+      ansible.builtin.file:
+        path: /var/lib/unbound
+        state: directory
+        owner: unbound
+        group: unbound
+        mode: "0755"
+      
+    - name: Change root.key ownership
+      become: true
+      ansible.builtin.file:
+        path: /var/lib/unbound/root.key
+        owner: unbound
+        group: unbound
+        mode: "0644"
