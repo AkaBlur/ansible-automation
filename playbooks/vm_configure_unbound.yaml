@@ -2,7 +2,7 @@
 
 - name: Setup Unbound as recursive DNS resolver for hosts
   hosts: all
-  tasks:
+  pre_tasks:
     - name: Check services on host
       become: true
       ansible.builtin.service_facts:
