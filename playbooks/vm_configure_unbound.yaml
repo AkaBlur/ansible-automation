@@ -4,9 +4,11 @@
   hosts: all
   pre_tasks:
     - name: Check services on host
+      become: true
       ansible.builtin.service_facts:
 
     - name: Check if systemd-resolve is stopped (binds port 53)
+      become: true
       ansible.builtin.systemd_service:
         name: systemd-resolved.service
         state: stopped
