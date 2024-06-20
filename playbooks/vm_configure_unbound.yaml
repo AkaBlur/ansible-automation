@@ -3,6 +3,16 @@
 - name: Setup Unbound as recursive DNS resolver for hosts
   hosts: all
   tasks:
+    - name: Check services on host
+      ansible.builtin.service_facts:
+
+    - name: Check if systemd-resolve is stopped (binds port 53)
+      ansible.builtin.systemd_service:
+        name: systemd-resolved.service
+        state: stopped
+        enabled: false
+      when: "'systemd-resolved.service' in services"
+
   roles:
     - role: l3d.unbound
       vars:
