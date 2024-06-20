@@ -1,4 +1,4 @@
 ---
 
 roles:
-  - names: l3d.unbound
+  - name: l3d.unbound
