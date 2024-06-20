@@ -21,3 +21,4 @@
         unbound_listen_addresses: [ "0.0.0.0" ]
         unbound_access_control: "{{ unbound_access_allow }}"
         submodule_versioncheck: true
+        unbound__auto_trust_anchor_file: "/usr/share/dns/root.key"
