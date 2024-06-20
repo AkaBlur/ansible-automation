@@ -1,0 +1,10 @@
+---
+
+- name: Setup Unbound as recursive DNS resolver for hosts
+  hosts: all
+  tasks:
+    - name: Ping Hosts
+      ansible.builtin.ping:
+
+  roles:
+    - l3d.unbound
