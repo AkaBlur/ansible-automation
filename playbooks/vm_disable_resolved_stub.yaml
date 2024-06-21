@@ -7,10 +7,15 @@
     - name: Service infos
       ansible.builtin.service_facts:
 
-    - name: systemd-resolved present and running
+    - name: systemd-resolved present
       ansible.builtin.fail:
-        msg: systemd-resolved.service not present and running!
-      when: "'systemd-resolved.service' not in services and services['systemd-resolved.service'].state != 'running'"
+        msg: systemd-resolved.service not present!
+      when: "'systemd-resolved.service' not in services"
+
+    - name: systemd-resolved running
+      ansible.builtin.fail:
+        msg: systemd-resolved.service not running!
+      when: "services['systemd-resolved.service'].state != 'running'"
 
     - name: Check resolved.conf.d directory
       ansible.builtin.file:
