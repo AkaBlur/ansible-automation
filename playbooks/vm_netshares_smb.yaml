@@ -4,4 +4,10 @@
   hosts: "{{ vm_hosts }}"
 
   roles:
-    - smb_setup
+    - role: smb_setup
+      vars:
+        smb__user: "{{ smb_user }}"
+        smb__pass: "{{ smb_pass }}"
+        smb__mount_dir: "{{ smb_mountdir }}"
+        smb__server_name: "{{ smb_servername }}"
+        smb__targets: "{{ smb_targets }}"
