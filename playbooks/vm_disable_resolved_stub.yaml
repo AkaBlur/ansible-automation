@@ -1,0 +1,36 @@
+---
+
+- name: Disable default stub listener from systemd-resolved
+  become: true
+  hosts: "{{ vm_hosts }}"
+  tasks:
+    - name: Service infos
+      ansible.builtin.service_facts:
+
+    - name: systemd-resolved present and running
+      ansible.builtin.fail:
+        msg: systemd-resolved.service not present and running!
+      when: "'systemd-resolved.service' not in services and services['systemd-resolved.service'].state != 'running'"
+
+    - name: Check resolved.conf.d directory
+      ansible.builtin.file:
+        path: /etc/systemd/resolved.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create file 10-disable-stub-listener.conf
+      ansible.builtin.copy:
+        content: |
+          [Resolve]
+          DNSStubListener=no
+        dest: /etc/systemd/resolved.conf.d/10-disable-stub-listener.conf
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Restart systemd-resolved
+      ansible.builtin.systemd_service:
+        name: systemd-resolved
+        state: restarted
