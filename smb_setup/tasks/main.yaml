@@ -18,8 +18,8 @@
 - name: Write SMB credentials to host
   ansible.builtin.copy:
     content: |
-      username={{ smb_user }}
-      password={{ smb_pass }}
+      username={{ smb__user }}
+      password={{ smb__pass }}
     dest: "{{ (path_etc, file_smb_creds) | ansible.builtin.path_join }}"
     owner: root
     group: root
@@ -28,45 +28,45 @@
 
 - name: Create mount point directory
   ansible.builtin.file:
-    path: "{{ (smb_mount_dir, item.mount_point) | ansible.builtin.path_join }}"
+    path: "{{ (smb__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
     state: directory
     owner: root
     group: root
     mode: "0755"
-  loop: "{{ smb_targets }}"
+  loop: "{{ smb__targets }}"
   become: true
 
 - name: Copy mount template to host
   ansible.builtin.template:
     src: mountfile.mount.j2
     dest: "{{ (path_systemd_unitfiles, \
-          (smb_mount_dir, (item.mount_point + mountfile_ext)) | ansible.builtin.path_join \
+          (smb__mount_dir, (item.mount_point + mountfile_ext)) | ansible.builtin.path_join \
           | regex_replace('^\/?(.*)$', '\\1') \
           | ansible.builtin.split('/') | join('-')) \
         | ansible.builtin.path_join }}"
     mode: "0644"
-  loop: "{{ smb_targets }}"
+  loop: "{{ smb__targets }}"
   become: true
 
 - name: Copy automount template to host
   ansible.builtin.template:
     src: mountfile.automount.j2
     dest: "{{ (path_systemd_unitfiles, \
-          (smb_mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
+          (smb__mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
           | regex_replace('^\/?(.*)$', '\\1') \
           | ansible.builtin.split('/') | join('-')) \
         | ansible.builtin.path_join }}"
     mode: "0644"
-  loop: "{{ smb_targets }}"
+  loop: "{{ smb__targets }}"
   become: true
 
 - name: Enable automount service on host
   ansible.builtin.systemd:
     daemon-reload: true
-    name: "{{ (smb_mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
+    name: "{{ (smb__mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
           | regex_replace('^\/?(.*)$', '\\1') \
           | ansible.builtin.split('/') | join('-') }}"
     state: started
     enabled: true
-  loop: "{{ smb_targets }}"
+  loop: "{{ smb__targets }}"
   become: true

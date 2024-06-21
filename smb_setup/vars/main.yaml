@@ -10,7 +10,7 @@ file_hosts: /etc/hosts
 dependencies_install:
   - cifs-utils
 
-hosts_entry: "{{ smb_server_ip }} {{ smb_server_name }}"
+hosts_entry: "{{ smb__server_ip }} {{ smb__server_name }}"
 
 mountfile_ext: .mount
 automountfile_ext: .automount

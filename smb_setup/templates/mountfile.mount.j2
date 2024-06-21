@@ -4,11 +4,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Mount]
-What=//{{ smb_server_name }}/{{ item.share_name }}
-Where={{ smb_mount_dir }}/{{ item.mount_point }}
+What=//{{ smb__server_name }}/{{ item.share_name }}
+Where={{ smb__mount_dir }}/{{ item.mount_point }}
 Type={{ mount_fstype }}
-Options=_netdev,{{ smb_perms }},uid={{ smb_uid }},gid={{ smb_gid }},iocharset={{ smb_charset }},credentials={{ path_etc }}/{{ file_smb_creds }},noserverino
-TimeoutSec={{ smb_timeout }}
+Options=_netdev,{{ smb__perms }},uid={{ smb__uid }},gid={{ smb__gid }},iocharset={{ smb__charset }},credentials={{ path_etc }}/{{ file_smb_creds }},noserverino,sfu,mfsymlinks
+TimeoutSec={{ smb__timeout }}
 
 [Install]
 WantedBy={{ mount_runlvl }}
