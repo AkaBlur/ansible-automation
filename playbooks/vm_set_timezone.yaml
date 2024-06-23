@@ -2,6 +2,7 @@
 
 - name: Sets the Timezone of Client
   become: true
+  hosts: "{{ vm_hosts }}"
   tasks:
     - name: Set the timezone
       community.general.timezone:
