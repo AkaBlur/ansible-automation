@@ -1,0 +1,22 @@
+---
+
+# Defaults for mc_vanilla
+
+# Possible modes
+mc_install: false
+
+# basic options
+mc__openjdk_version: 21
+mc__accept_eula: true
+
+mc__mc_target_version: latest
+
+# server.properties related options
+mc__option_difficulty: normal
+mc__option_gamemode: survival
+mc__option_world_name: newmc
+mc__option_max_players: 10
+mc__option_motd: "Automated Minecraft instancing brought to you by Ansible"
+mc__option_online_mode: true
+mc__option_pvp: true
+mc__option_server_ip: "{{ ansible_all_ipv4_addresses }}"

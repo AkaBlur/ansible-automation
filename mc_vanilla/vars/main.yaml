@@ -1,0 +1,17 @@
+---
+
+# Variables for mc_vanilla
+
+# host-related items
+mc__mc_user: minecraft
+mc__mc_group: minecraft
+mc__mc_server_dir_name: mc_server
+
+mc__mc_server_dir: "{{ ('/home', mc__mc_user, mc__mc_server_dir_name) | ansible.builtin.path_join }}"
+mc__mc_server_jar: "{{ (mc__mc_server_dir, 'server.jar') | ansible.builtin.path_join }}"
+mc__mc_server_version_file: "{{ (mc__mc_server_dir, '.ansible_mc_version') | ansible.builtin.path_join }}"
+
+# Minecraft-related items
+mc__option_enforce_whitelist: true
+mc__option_whitelist: true
+mc__option_server_port: 25565

@@ -1,0 +1,37 @@
+---
+
+# get latest server version
+- name: Check latest server version
+  ansible.builtin.script: mc_info.py version
+  args:
+    executable: python3
+  register: mc_version_data
+
+# latest server.jar file from Mojang
+- name: Latest Minecraft Server download
+  ansible.builtin.script: mc_info.py url server
+  args:
+    executable: python3
+  register: mc_server_data
+
+# download latest server jar if all applications are met
+- name: Grab latest Minecraft Server file
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ mc_server_data.stdout_lines[0] }}"
+    dest: "{{ mc__mc_server_jar }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+    force: true
+  
+- name: Create managed version file
+  become: true
+  ansible.builtin.template:
+    src: .ansible_mc_version.j2
+    dest: "{{ mc__mc_server_version_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+...

@@ -1,0 +1,7 @@
+---
+
+- name: Setup hosts for Minecraft usage
+  ansible.builtin.import_tasks: install.yaml
+  when: mc_install == true
+
+...

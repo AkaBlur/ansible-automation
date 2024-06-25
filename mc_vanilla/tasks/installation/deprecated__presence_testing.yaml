@@ -1,0 +1,44 @@
+---
+
+# file presence
+- name: Check server.jar present
+  become: true
+  ansible.builtin.stat:
+    path: "{{ mc__mc_server_jar }}"
+  register: mc_server_jar_stat
+
+- name: Check Ansible managed status
+  become: true
+  ansible.builtin.stat:
+    path: "{{ mc__mc_server_version_file }}"
+  register: mc_version_file_stat
+
+# check for complete file setup for Ansible management
+- name: Check complete server presence
+  ansible.builtin.set_fact:
+    mc_managed_version_file: "{{ mc_version_file_stat.stat.exists }}"
+    mc_jar_file: "{{ mc_server_jar_stat.stat.exists }}"
+
+# retrieval of managed Minecraft version
+- name: Get Ansible Minecraft version info
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ mc__mc_server_version_file }}"
+  register: mc_version_file_slurp
+  when: mc_managed_version_file | bool
+
+- name: Managed Minecraft version
+  ansible.builtin.set_fact:
+    mc_host_installed_version: "{{ mc_version_file_slurp['content'] |
+      ansible.builtin.b64decode |
+      ansible.builtin.regex_search('^Installed=(.*)', '\\1', multiline = True) |
+      first }}"
+  when: mc_managed_version_file | bool
+
+# check for latest managed version
+- name: Check managed version
+  ansible.builtin.set_fact:
+    mc_managed_version_latest: "{{ mc_host_installed_version == mc_version_data.stdout_lines[0] }}"
+  when: mc_managed_version_file | bool
+
+...

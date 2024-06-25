@@ -1,0 +1,12 @@
+---
+
+- name: Prepare Hosts
+  ansible.builtin.import_tasks: installation/prepare_hosts.yaml
+
+- name: Download latest server.jar
+  ansible.builtin.import_tasks: installation/mc_download.yaml
+
+- name: Initial Run
+  ansible.builtin.import_tasks: installation/first_run.yaml
+
+...
