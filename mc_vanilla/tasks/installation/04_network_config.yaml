@@ -1,0 +1,22 @@
+---
+
+# Configures firewall
+- name: Configure Firewall for Minecraft
+  block:
+    - name: Open Minecraft TCP Port
+      become: true
+      community.general.ufw:
+        port: "{{ mc__option_server_port }}"
+        rule: allow
+        proto: tcp
+
+    - name: Open Minecraft UDP Port
+      become: true
+      community.general.ufw:
+        port: "{{ mc__option_server_port }}"
+        rule: allow
+        proto: udp
+
+  when: ansible_os_family == "Debian"
+
+...

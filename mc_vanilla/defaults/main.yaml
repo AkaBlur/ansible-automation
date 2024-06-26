@@ -9,7 +9,14 @@ mc_install: false
 mc__openjdk_version: 21
 mc__accept_eula: true
 
+# target version
+# either 'latest' or specific version number (e.g. 1.20)
 mc__mc_target_version: latest
+
+# initial RAM ammount
+mc__ramsize_min_init: 1024M
+# maximum RAM ammount
+mc__ramsize_max: 1024M
 
 # server.properties related options
 mc__option_difficulty: normal
@@ -19,4 +26,4 @@ mc__option_max_players: 10
 mc__option_motd: "Automated Minecraft instancing brought to you by Ansible"
 mc__option_online_mode: true
 mc__option_pvp: true
-mc__option_server_ip: "{{ ansible_all_ipv4_addresses }}"
+mc__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"

@@ -7,7 +7,7 @@
     name: "{{ mc__mc_group }}"
     state: present
 
-- name: Setup minecraft user
+- name: Setup Minecraft user
   become: true
   ansible.builtin.user:
     name: "{{ mc__mc_user }}"
@@ -24,10 +24,19 @@
     group: "{{ mc__mc_group }}"
     mode: "0755"
 
-- name: Install Java JDK
+- name: Install Java SDK
   become: true
   ansible.builtin.package:
     name: "openjdk-{{ mc__openjdk_version }}-jdk"
     state: present
+
+- name: Copy Server control script to host
+  become: true
+  ansible.builtin.template:
+    src: "mc_server_control.sh.j2"
+    dest: "{{ (mc__mc_home_dir, mc__control_script_name) | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
 
 ...

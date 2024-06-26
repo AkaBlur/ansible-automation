@@ -1,12 +1,18 @@
 ---
 
 - name: Prepare Hosts
-  ansible.builtin.import_tasks: installation/prepare_hosts.yaml
+  ansible.builtin.import_tasks: installation/00_prepare_hosts.yaml
 
-- name: Download latest server.jar
-  ansible.builtin.import_tasks: installation/mc_download.yaml
+- name: Download server.jar
+  ansible.builtin.import_tasks: installation/01_mc_download.yaml
 
 - name: Initial Run
-  ansible.builtin.import_tasks: installation/first_run.yaml
+  ansible.builtin.import_tasks: installation/02_first_run.yaml
+
+- name: Setup Minecraft-Server Service
+  ansible.builtin.import_tasks: installation/03_init_service.yaml
+
+- name: Setup Networking
+  ansible.builtin.import_tasks: installation/04_network_config.yaml
 
 ...
