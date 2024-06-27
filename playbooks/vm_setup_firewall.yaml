@@ -1,0 +1,42 @@
+---
+
+# setup basic firewall usage
+- name: Open Ports in Firewall on hosts
+  become: true
+  hosts: "{{ vm_hosts }}"
+  tasks:
+    - name: Prepare Firewall
+      block:
+        - name: Check UFW
+          ansible.builtin.package:
+            name: "ufw"
+            state: present
+
+        # fw_allow can either contain list with:
+        # { port: <port>, rule: <allow|deny> } OR
+        # { port: <port>, rule: <allow|deny>, proto: <protocol> }
+        - name: Set Rule with Port with Protocol
+          community.general.ufw:
+            port: "{{ item.port }}"
+            rule: "{{ item.rule }}"
+            proto: "{{ item.proto }}"
+          when: "'proto' in item"
+          loop: "{{ fw_allow }}"
+          
+        - name: Set Rule with Port
+          community.general.ufw:
+            port: "{{ item.port }}"
+            rule: "{{ item.rule }}"
+          when: "'proto' not in item"
+          loop: "{{ fw_allow }}"
+
+        # general settings for UFW
+        # fw_rule_general: allow or deny
+        - name: Set General UFW rule
+          community.general.ufw:
+            state: enabled
+            policy: "{{ fw_rule_general }}"
+
+      when: ansible_os_family == "Debian"
+
+...
