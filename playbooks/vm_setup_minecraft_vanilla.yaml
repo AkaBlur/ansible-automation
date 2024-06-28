@@ -5,7 +5,6 @@
   hosts: "{{ vm_hosts }}"
   roles:
     - role: mc_vanilla
-      vars:
-        "{{ mc_configuration }}"
+      vars: "{{ mc_configuration }}"
 
 ...
