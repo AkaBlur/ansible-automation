@@ -27,7 +27,7 @@
 - name: Install Java SDK
   become: true
   ansible.builtin.package:
-    name: "openjdk-{{ mc__openjdk_version }}-jdk"
+    name: "openjdk-{{ mc__openjdk_version }}-jre-headless"
     state: present
 
 - name: Copy Server control script to host
