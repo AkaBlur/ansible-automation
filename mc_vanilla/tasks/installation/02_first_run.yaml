@@ -1,0 +1,31 @@
+---
+
+- name: First initial startup after installation
+  become: true
+  ansible.builtin.command:
+    cmd: sudo -u minecraft java -jar server.jar nogui
+    chdir: "{{ mc__mc_server_dir }}"
+    creates:
+      - "{{ (mc__mc_server_dir, 'eula.txt') |  ansible.builtin.path_join }}"
+      - "{{ (mc__mc_server_dir, 'server.properties') |  ansible.builtin.path_join }}"
+
+- name: Process EULA
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ (mc__mc_server_dir, 'eula.txt') | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    regexp: '^eula'
+    line: eula=true
+  when: mc__accept_eula | bool
+
+- name: Setup server.properties
+  become: true
+  ansible.builtin.template:
+    src: server.properties.j2
+    dest: "{{ (mc__mc_server_dir, 'server.properties') | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0644"
+
+...

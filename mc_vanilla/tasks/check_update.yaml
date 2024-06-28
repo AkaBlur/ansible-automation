@@ -1,0 +1,39 @@
+---
+
+- name: Check latest server version
+  ansible.builtin.script: mc_info.py version
+  args:
+    executable: python3
+  register: mc_version_data
+
+- name: Get Ansible Minecraft version info
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ mc__mc_server_version_file }}"
+  register: mc_version_file_slurp
+
+- name: Installed Minecraft Version
+  ansible.builtin.set_fact:
+    mc__host_installed_version: "{{ mc_version_file_slurp['content'] |
+      ansible.builtin.b64decode |
+      ansible.builtin.regex_search('^Installed=(.*)', '\\1', multiline = True) |
+      first }}"
+
+- name: Update check
+  ansible.builtin.set_fact:
+    mc__instance_updatable: false
+
+- name: Update applicable
+  ansible.builtin.set_fact:
+    mc__instance_updatable: true
+  when: (mc__host_installed_version != mc_version_data.stdout_lines[0] and mc__mc_target_version == "latest") or
+        (mc__host_installed_version != mc__mc_target_version and mc__mc_target_version != "latest")
+
+- name: Notify via Telegram Bot
+  community.general.telegram:
+    token: "{{ telegram_api_token }}"
+    api_args:
+      chat_id: "{{ telegram_chat_id }}"
+      parse_mode: "MarkdownV2"
+      text: "*Ansible*\nManaged Minecraft Instance can be updated\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
+  when: mc__instance_updatable

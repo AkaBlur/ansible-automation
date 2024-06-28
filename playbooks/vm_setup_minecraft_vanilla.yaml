@@ -1,0 +1,10 @@
+---
+
+- name: Manage a Minecraft Instance on hosts
+  become: true
+  hosts: "{{ vm_hosts }}"
+  roles:
+    - role: mc_vanilla
+      vars: "{{ mc_configuration }}"
+
+...
