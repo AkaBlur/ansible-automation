@@ -4,6 +4,11 @@
 
 # Possible modes
 mc_install: false
+mc_start: false
+mc_stop: false
+mc_restart: false
+mc_check_update: false
+mc_do_update: false
 
 # basic options
 mc__openjdk_version: 21

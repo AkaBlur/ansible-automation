@@ -12,6 +12,7 @@ mc__mc_server_dir_name: mc_server
 mc__mc_home_dir: "{{ ('/home', mc__mc_user) | ansible.builtin.path_join }}"
 mc__mc_server_dir: "{{ ('/home', mc__mc_user, mc__mc_server_dir_name) | ansible.builtin.path_join }}"
 mc__mc_server_jar: "{{ (mc__mc_server_dir, 'server.jar') | ansible.builtin.path_join }}"
+mc__mc_server_jar_update: "{{ (mc__mc_server_dir, 'server.jar.update') | ansible.builtin.path_join }}"
 mc__mc_server_version_file: "{{ (mc__mc_server_dir, '.ansible_mc_version') | ansible.builtin.path_join }}"
 
 # hosts systemd items

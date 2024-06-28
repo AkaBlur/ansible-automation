@@ -1,0 +1,25 @@
+---
+
+- name: Management Check
+  ansible.builtin.import_tasks: check_managed.yaml
+  when: mc_start or mc_stop or mc_restart
+
+- name: Stop Minecraft Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: stopped
+  when: mc_stop or mc_restart
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Start Minecraft Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: started
+  when: mc_start or mc_restart
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+...

@@ -22,9 +22,11 @@ class ManifestV2Data:
 class VersionData:
     DownloadURLClient: str
     DownloadURLServer: str
+    VersionID: str
 
 
 def get_manifest(version: str) -> ManifestV2Data:
+    """GETs the manifest for the specified version from Mojang"""
     url = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
     headers = {"Content-Type": "application/json"}
 
@@ -62,6 +64,7 @@ def get_manifest(version: str) -> ManifestV2Data:
 
 
 def parse_manifest(version_manifest: ManifestV2Data) -> VersionData:
+    """Parses Mojang manifest data and returns a download link and version for that URL"""
     url = version_manifest.URL
     headers = {"Content-Type": "application/json"}
 
@@ -74,6 +77,7 @@ def parse_manifest(version_manifest: ManifestV2Data) -> VersionData:
             ParsedData = VersionData(
                 DownloadURLClient=RetJSON["downloads"]["client"]["url"],
                 DownloadURLServer=RetJSON["downloads"]["server"]["url"],
+                VersionID=RetJSON["id"]
             )
 
             return ParsedData
@@ -87,6 +91,7 @@ def parse_manifest(version_manifest: ManifestV2Data) -> VersionData:
 
 
 def get_latest_version() -> str:
+    """GET the latest version"""
     Manifest = get_manifest("latest")
     
     return Manifest.ID
@@ -144,9 +149,11 @@ if __name__ == "__main__":
         if FileType in ["server", "client"]:
             if FileType == "server":
                 print(ParsedData.DownloadURLServer)
+                print(ParsedData.VersionID)
 
             else:
                 print(ParsedData.DownloadURLClient)
+                print(ParsedData.VersionID)
 
         else:
             raise KeyError(f"Wrong file type '{FileType}'! Use 'server' or 'client' only.")  

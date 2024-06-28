@@ -1,12 +1,5 @@
 ---
 
-# get latest server version - gets put into .ansible_mc_version managed file
-- name: Check latest server version
-  ansible.builtin.script: mc_info.py version
-  args:
-    executable: python3
-  register: mc_version_data
-
 # latest server.jar file from Mojang
 - name: Minecraft Server Download URL
   ansible.builtin.script: mc_info.py url server "{{ mc__mc_target_version }}"

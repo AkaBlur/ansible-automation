@@ -12,7 +12,4 @@
 - name: Setup Minecraft-Server Service
   ansible.builtin.import_tasks: installation/03_init_service.yaml
 
-- name: Setup Networking
-  ansible.builtin.import_tasks: installation/04_network_config.yaml
-
 ...

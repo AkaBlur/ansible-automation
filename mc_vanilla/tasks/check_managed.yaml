@@ -1,0 +1,23 @@
+---
+
+- name: Presence of Minecraft Server
+  become: true
+  ansible.builtin.stat:
+    path: "{{ mc__mc_server_dir }}"
+  register: mc_server_dir_stat
+
+- name: Minecraft Server present
+  ansible.builtin.fail:
+  when: not (mc_server_dir_stat.stat.exists and mc_server_dir_stat.stat.isdir)
+
+- name: Presence of Managed Version file
+  become: true
+  ansible.builtin.stat:
+    path: "{{ mc__mc_server_version_file }}"
+  register: mc_server_managed_ver_stat
+
+- name: Managed Minecraft Version file present
+  ansible.builtin.fail:
+  when: not mc_server_managed_ver_stat.stat.exists
+
+...
