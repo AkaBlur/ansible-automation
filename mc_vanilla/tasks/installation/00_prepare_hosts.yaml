@@ -12,7 +12,7 @@
   ansible.builtin.user:
     name: "{{ mc__mc_user }}"
     group: "{{ mc__mc_group }}"
-    password: "{{ password_hashed }}"
+    password: "{{ mc__password_hashed }}"
     state: present
 
 - name: Setup server directory
