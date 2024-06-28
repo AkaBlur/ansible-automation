@@ -13,6 +13,8 @@ mc_do_update: false
 # basic options
 mc__openjdk_version: 21
 mc__accept_eula: true
+# this needs to be set by the user
+mc__password_hashed: ""
 
 # target version
 # either 'latest' or specific version number (e.g. 1.20)
