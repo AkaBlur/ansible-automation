@@ -10,6 +10,6 @@
     - name: Copy local save file onto remote share
       become: true
       ansible.builtin.copy:
-        src: "{{ (mc_home_dir, mc_server_world_name) | ansible.builtin.path_join }}".tar.gz2
+        src: "{{ (mc_home_dir, mc_server_world_name) | ansible.builtin.path_join }}.tar.gz2"
         dest: "{{ (mc_remote_share, nfs_mc_remote_dir) | ansible.builtin.path_join }}"
         remote_src: true
