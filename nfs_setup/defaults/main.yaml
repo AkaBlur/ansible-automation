@@ -1,0 +1,34 @@
+---
+
+# defaults for nfs_setup
+
+# SERVER OPTIONS
+# IP address of NFS server
+nfs__server_ip: 10.0.0.2
+# Domain Name of NFS server
+nfs__server_name: FILES
+# main export path for all NFS shares
+nfs__server_export_path: /export
+
+# HOST OPTIONS
+# directory for mount points on host
+nfs__mount_dir: /media
+# collection of NFS shares
+# share_name: exported directory name on NFS server (e.g. /exports/myshare)
+# mount_point: local directory where NFS share is mounted (in respect to general mount dir)
+nfs__targets:
+  - { share_name: "library", mount_point: "library" }
+
+# NFS security access mode
+nfs__security_lvl: sys
+# NFS share permissions
+nfs__perms: rw
+# NFS version
+nfs__version: 4
+
+# Timeout for mount
+nfs__timeout: 30
+# Timeout for automount
+nfs__automount_timeout: 300
+
+...

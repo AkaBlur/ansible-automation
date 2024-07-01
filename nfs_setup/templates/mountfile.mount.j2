@@ -1,0 +1,14 @@
+[Unit]
+Description=NFS Share for {{ item.share_name }}
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What={{ nfs__server_name }}:{{ nfs__server_export_path }}/{{ item.share_name }}
+Where={{ nfs__mount_dir }}/{{ item.mount_point }}
+Type={{ mount_fstype }}
+Options=vers={{ nfs__version }},sec={{ nfs__security_lvl }}
+TimeoutSec={{ nfs__timeout }}
+
+[Install]
+WantedBy={{ mount_runlvl }}

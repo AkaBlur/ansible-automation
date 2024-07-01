@@ -1,0 +1,20 @@
+---
+
+# vars for nfs_setup
+path_etc: /etc
+path_systemd_unitfiles: /etc/systemd/system
+
+file_hosts: /etc/hosts
+
+dependencies_install:
+  - nfs-common
+
+hosts_entry: "{{ nfs__server_ip }} {{ nfs__server_name }}"
+
+mountfile_ext: .mount
+automountfile_ext: .automount
+
+mount_fstype: nfs
+mount_runlvl: multi-user.target
+
+...

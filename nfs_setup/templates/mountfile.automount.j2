@@ -1,0 +1,10 @@
+[Unit]
+Description=NFS Share for {{ item.share_name }}
+ConditionPathExists={{ nfs__mount_dir }}/{{ item.mount_point }}
+
+[Automount]
+Where={{ nfs__mount_dir }}/{{ item.mount_point }}
+TimeoutIdleSec={{ nfs__automount_timeout }}
+
+[Install]
+WantedBy={{ mount_runlvl }}
