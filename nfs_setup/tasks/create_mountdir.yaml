@@ -6,6 +6,7 @@
   register: mount_point_dir
 
 - name: Create mount point directory
+  become: true
   ansible.builtin.file:
     path: "{{ (nfs__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
     state: directory
