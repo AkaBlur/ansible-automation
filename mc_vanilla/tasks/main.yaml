@@ -1,7 +1,7 @@
 ---
 
 - name: Setup hosts for Minecraft usage
-  ansible.builtin.import_tasks: install.yaml
+  ansible.builtin.import_tasks: do_install.yaml
   when: mc_install
   
 - name: Cycle Server
@@ -15,5 +15,9 @@
 - name: Update Minecraft instance on host
   ansible.builtin.import_tasks: do_update.yaml
   when: mc_do_update
+
+- name: Save Minecraft World locally
+  ansible.builtin.import_tasks: do_save.yaml
+  when: mc_do_save
 
 ...

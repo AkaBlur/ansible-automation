@@ -18,6 +18,8 @@
     mode: "0755"
     force: true
 
+# reduced downtime:
+# stop -> copy file -> start
 - name: Stop Minecraft Server
   become: true
   ansible.builtin.service:
@@ -36,12 +38,6 @@
     mode: "0755"
     remote_src: true
 
-- name: Remove update file
-  become: true
-  ansible.builtin.file:
-    path: "{{ mc__mc_server_jar_update }}"
-    state: absent
-
 - name: Start Minecraft Server
   become: true
   ansible.builtin.service:
@@ -49,6 +45,12 @@
     enabled: true
     state: started
   timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Remove update file
+  become: true
+  ansible.builtin.file:
+    path: "{{ mc__mc_server_jar_update }}"
+    state: absent
 
 - name: Create managed version file
   become: true

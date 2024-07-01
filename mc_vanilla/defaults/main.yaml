@@ -9,6 +9,7 @@ mc_stop: false
 mc_restart: false
 mc_check_update: false
 mc_do_update: false
+mc_do_save: false
 
 # basic options
 mc__openjdk_version: 21
@@ -20,9 +21,9 @@ mc__password_hashed: ""
 # either 'latest' or specific version number (e.g. 1.20)
 mc__mc_target_version: latest
 
-# initial RAM ammount
+# initial RAM amount
 mc__ramsize_min_init: 1024M
-# maximum RAM ammount
+# maximum RAM amount
 mc__ramsize_max: 1024M
 
 # server.properties related options

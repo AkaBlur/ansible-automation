@@ -39,4 +39,13 @@
     group: "{{ mc__mc_group }}"
     mode: "0755"
 
+- name: Copy Server save script to host
+  become: true
+  ansible.builtin.template:
+    src: "mc_server_save_world.sh.j2"
+    dest: "{{ (mc__mc_home_dir, mc__save_script_name) | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+
 ...

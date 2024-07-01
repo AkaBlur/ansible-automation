@@ -28,3 +28,4 @@ mc__option_server_port: 25565
 mc__service_timeout: 120
 mc__screen_name: minecraft-server
 mc__control_script_name: mc_server_control.sh
+mc__save_script_name: mc_server_save_world.sh

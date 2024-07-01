@@ -1,0 +1,24 @@
+#!/bin/bash
+
+HOMEDIR="{{ mc__mc_home_dir }}"
+SERVERDIR="{{ mc__mc_server_dir_name }}"
+SERVERNAME="{{ mc__option_world_name }}"
+
+if [ "$(pwd)" != "$HOMEDIR" ]; then
+        printf "Script not inside user directory!\nAborting!\n"
+        exit 1
+fi
+
+if [ ! -d "$SERVERDIR" ]; then
+        printf "Server not found!\nAborting!\n"
+        exit 1
+fi
+
+if [ ! -d "$SERVERDIR"/"$SERVERNAME" ]; then
+        printf "Server World Save not found!\nAborting!\n"
+        exit 1
+fi
+
+cd $SERVERDIR
+
+tar -czf ../"$SERVERNAME".tar.gz2 "$SERVERNAME"
