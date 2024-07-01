@@ -1,0 +1,17 @@
+---
+
+- name: Check for mount point
+  ansible.builtin.stat:
+    path: "{{ (nfs__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
+  register: mount_point_dir
+
+- name: Create mount point directory
+  ansible.builtin.file:
+    path: "{{ (nfs__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: not mount_point_dir.stat.exists
+
+...

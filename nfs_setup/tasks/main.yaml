@@ -16,13 +16,7 @@
     mode: "0644"
 
 - name: Create mount point directory
-  become: true
-  ansible.builtin.file:
-    path: "{{ (nfs__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
+  include_tasks: create_mountdir.yaml
   loop: "{{ nfs__targets }}"
 
 - name: Copy mount template to host
