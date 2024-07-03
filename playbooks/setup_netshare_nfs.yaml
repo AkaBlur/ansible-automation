@@ -1,0 +1,7 @@
+---
+
+- name: Setting up NFS network shares for VM instances
+  hosts: "{{ vm_hosts }}"
+
+  roles:
+    - role: smb_setup
