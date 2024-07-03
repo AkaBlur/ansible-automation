@@ -4,4 +4,4 @@
   hosts: "{{ vm_hosts }}"
 
   roles:
-    - role: smb_setup
+    - role: nfs_setup
