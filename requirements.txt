@@ -1,1 +1,2 @@
-ansible==9.4.0
+ansible==10.1.0
+ansible-dev-tools==24.6.1
