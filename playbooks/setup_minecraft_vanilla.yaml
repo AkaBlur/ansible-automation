@@ -5,7 +5,7 @@
   # https://github.com/ansible/ansible/issues/83316
   # escalating ansible.builtin.script produces an empty entry from the PW
   # -> not allowed on this role!
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
   roles:
     - role: mc_vanilla
 

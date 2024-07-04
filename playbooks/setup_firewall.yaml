@@ -3,9 +3,10 @@
 # setup basic firewall usage
 - name: Open Ports in Firewall on hosts
   become: true
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
   tasks:
     - name: Prepare Firewall
+      when: ansible_os_family == "Debian"
       block:
         - name: Check UFW
           ansible.builtin.package:
@@ -22,7 +23,7 @@
             proto: "{{ item.proto }}"
           when: "'proto' in item"
           loop: "{{ fw_allow }}"
-          
+
         - name: Set Rule with Port
           community.general.ufw:
             port: "{{ item.port }}"
@@ -36,7 +37,5 @@
           community.general.ufw:
             state: enabled
             policy: "{{ fw_rule_general }}"
-
-      when: ansible_os_family == "Debian"
 
 ...

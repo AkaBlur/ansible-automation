@@ -1,18 +1,18 @@
 ---
 
 - name: Update all apt packages
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
 
   tasks:
     - name: Update apt packages
       become: true
-      apt:
-        update_cache: yes
-        upgrade: yes
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
 
     - name: Check Reboot state
       become: true
-      stat:
+      ansible.builtin.stat:
         path: /var/run/reboot-required
       register: reboot_required
 

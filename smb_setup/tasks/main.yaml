@@ -70,3 +70,5 @@
     enabled: true
   loop: "{{ smb__targets }}"
   become: true
+
+...

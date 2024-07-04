@@ -1,7 +1,7 @@
 ---
 
 - name: Save Minecraft World instance on Remote Share
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
   roles:
     - role: nfs_setup
     - role: mc_vanilla

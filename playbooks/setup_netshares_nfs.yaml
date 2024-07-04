@@ -1,7 +1,7 @@
 ---
 
 - name: Setting up NFS network shares for VM instances
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
 
   roles:
     - role: nfs_setup
