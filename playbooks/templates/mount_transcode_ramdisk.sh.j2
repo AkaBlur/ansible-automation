@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# input of requested size of RAM disk
+RAM_SIZE_KBYTE={{ ramdisk_size_kbytes }}
+RAM_SIZE_TOTAL=$(($RAM_SIZE_KBYTE*1024))
+
+MOUNT_DIR={{ ramdisk_mount_dir }}
+RAMDISK_NAME={{ ramdisk_mount_name }}
+
+# check for existing device from brd
+# otherwise insert kernel module
+if [ ! -b /dev/ram0 ];then
+	printf "RAM device not found! Creating..."
+	modprobe brd rd_size=$RAM_SIZE_KBYTE max_part=1 rd_nr=1
+fi
+
+RAM_SIZE=$(fdisk /dev/ram0 -l | grep -E "Disk /dev/ram0")
+RAM_SIZE=$(expr "$RAM_SIZE" : '.*\( [0-9]\+ bytes\).*')
+RAM_SIZE=${RAM_SIZE% bytes}
+
+# check for correct size of RAM disk
+if ! [ $RAM_SIZE -eq $RAM_SIZE_TOTAL ];then
+	echo "RAM initiated with wrong size! Aborting"
+	exit 1
+fi
+
+# check first if there is already an existing filesystem on RAM
+if [[ $(blkid | grep "/dev/ram0") ]];then
+	echo "Found existing fs on /dev/ram0! Aborting"
+	exit 1
+fi
+
+# make filesystem
+mke2fs -t ext4 -O extents -vm0 /dev/ram0 $RAM_SIZE_KBYTE -L "$RAMDISK_NAME"
+
+# check for directory or create one
+if ! [ -d "$MOUNT_DIR/$RAMDISK_NAME" ];then
+	mkdir "$MOUNT_DIR/$RAMDISK_NAME"
+fi
+
+chmod 766 "$MOUNT_DIR/$RAMDISK_NAME"
+mount /dev/ram0 "$MOUNT_DIR/$RAMDISK_NAME"
+
+printf "RAMDISK creation successful!"
+exit 0

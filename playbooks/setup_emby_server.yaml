@@ -2,23 +2,11 @@
 
 - name: Setup Host with Emby server
   hosts: testingvms
-  tasks:
-    - name: Request Emby-Server-Version Script
-      ansible.builtin.get_url:
-        url: >
-          https://gist.githubusercontent.com/AkaBlur/
-          c24b1f4fd6e0aa8ed7d18815eedc15cd/raw/
-          844e48ab8edbe5b0505f07fb5760f44abb19dcf3/
-          emby_get_latest_server.py
-        dest: "/tmp/emby_get_latest_server.py"
-        owner: "{{ ansible_user }}"
-        mode: "0755"
-      tags: download, local
-
+  pre_tasks:
     - name: Get latest Emby server version
-      ansible.builtin.command:
-        cmd: ./emby_get_latest_server.py
-        chdir: "/tmp"
+      ansible.builtin.script: emby_get_latest_server.py
+      args:
+        executable: python3
       register: emby_server_version_output
       changed_when: emby_server_version_output.rc == 0
 
@@ -33,5 +21,24 @@
       ansible.builtin.apt:
         deb: "{{ emby_server_version_output.stdout_lines[0] }}"
         state: present
+
+    - name: Generate RAMDISK script
+      become: true
+      ansible.builtin.template:
+        src: mount_transcode_ramdisk.sh.j2
+        dest: /root/mount_transcode_ramdisk.sh
+        owner: root
+        group: root
+        mode: "0700"
+
+    - name: Add RAMDISK to cron at startup
+      become: true
+      ansible.builtin.cron:
+        name: "Generate and mount RAMDISK"
+        special_time: reboot
+        job: "cd /root && /root/mount_transcode_ramdisk.sh > /var/log/mount_transcode_ramdisk.log 2>&1"
+
+  roles:
+    - role: nfs_setup
 
 ...

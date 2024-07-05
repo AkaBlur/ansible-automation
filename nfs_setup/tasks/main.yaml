@@ -16,7 +16,7 @@
     mode: "0644"
 
 - name: Create mount point directory
-  include_tasks: create_mountdir.yaml
+  ansible.builtin.include_tasks: create_mountdir.yaml
   loop: "{{ nfs__targets }}"
 
 - name: Copy mount template to host
