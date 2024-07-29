@@ -10,6 +10,7 @@ mc_restart: false
 mc_check_update: false
 mc_do_update: false
 mc_do_save: false
+mc_do_copy_world: false
 
 # basic options
 mc__openjdk_version: 21
@@ -35,3 +36,9 @@ mc__option_motd: "Automated Minecraft instancing brought to you by Ansible"
 mc__option_online_mode: true
 mc__option_pvp: true
 mc__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+# optional copy destination to where world will be copied
+mc__copy_location: "/mnt/backup"
+# UID and GID of user for copy location
+mc__copy_uid: 1000
+mc__copy_gid: 100

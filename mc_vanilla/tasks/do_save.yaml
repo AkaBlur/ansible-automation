@@ -13,6 +13,7 @@
   ansible.builtin.command:
     cmd: sudo -u minecraft "{{ ('.', mc__save_script_name) | ansible.builtin.path_join }}"
     chdir: "{{ mc__mc_home_dir }}"
+  register: mc_save_out
 
 - name: Start Minecraft Server
   become: true
@@ -21,5 +22,15 @@
     enabled: true
     state: started
   timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Copy World file to Backup Location
+  become: true
+  ansible.builtin.copy:
+    src: "{{ (mc__mc_home_dir, mc_save_out.stdout_lines[0]) | ansible.builtin.path_join }}"
+    dest: "{{ mc__copy_location }}"
+    owner: "{{ mc__copy_uid }}"
+    group: "{{ mc__copy_gid }}"
+    remote_src: true
+  when: mc_do_copy_world
 
 ...
