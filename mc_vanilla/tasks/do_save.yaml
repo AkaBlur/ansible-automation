@@ -25,12 +25,8 @@
 
 - name: Copy World file to Backup Location
   become: true
-  ansible.builtin.copy:
-    src: "{{ (mc__mc_home_dir, mc_save_out.stdout_lines[0]) | ansible.builtin.path_join }}"
-    dest: "{{ mc__copy_location }}"
-    owner: "{{ mc__copy_uid }}"
-    group: "{{ mc__copy_gid }}"
-    remote_src: true
+  ansible.builtin.command:
+    cmd: sudo cp "{{ (mc__mc_home_dir, mc_save_out.stdout_lines[0]) | ansible.builtin.path_join }}" "{{ mc__copy_location }}"
   when: mc_do_copy_world
 
 ...
