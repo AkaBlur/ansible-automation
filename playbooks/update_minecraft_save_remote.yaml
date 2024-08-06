@@ -6,11 +6,4 @@
     - role: nfs_setup
     - role: mc_vanilla
 
-  post_tasks:
-    - name: Copy local save file onto remote share
-      become: true
-      ansible.builtin.copy:
-        src: "{{ (mc_home_dir, mc_server_world_name) | ansible.builtin.path_join }}.tar.gz2"
-        dest: "{{ (mc_remote_share, nfs_mc_remote_dir) | ansible.builtin.path_join }}"
-        mode: "{{ nfs_file_mode }}"
-        remote_src: true
+...

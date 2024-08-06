@@ -24,3 +24,5 @@
           parse_mode: "MarkdownV2"
           text: "*Ansible*\nReboot required on:\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
       when: reboot_required.stat.exists
+
+...

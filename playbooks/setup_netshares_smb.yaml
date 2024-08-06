@@ -11,3 +11,5 @@
         smb__mount_dir: "{{ smb_mountdir | default([]) }}"
         smb__server_name: "{{ smb_servername | default([]) }}"
         smb__targets: "{{ smb_targets | default([]) }}"
+
+...
