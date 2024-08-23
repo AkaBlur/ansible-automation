@@ -31,9 +31,11 @@
 
 - name: Notify via Telegram Bot
   community.general.telegram:
-    token: "{{ telegram_api_token }}"
+    token: "{{ mc__telegram_api_token }}"
     api_args:
-      chat_id: "{{ telegram_chat_id }}"
+      chat_id: "{{ mc__telegram_chat_id }}"
       parse_mode: "MarkdownV2"
       text: "*Ansible*\nManaged Minecraft Instance can be updated\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
   when: mc__instance_updatable
+
+...
