@@ -4,7 +4,7 @@
   become: true
   timeout: 95
   ansible.builtin.command:
-    cmd: timeout 90s sudo -u minecraft java -jar server.jar nogui
+    cmd: timeout 90s sudo -u "{{ mc__mc_user }}" java -jar server.jar nogui
     chdir: "{{ mc__mc_server_dir }}"
     creates: "{{ (mc__mc_server_dir, 'eula.txt') |  ansible.builtin.path_join }}"
   register: mc_install_return
