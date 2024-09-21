@@ -1,0 +1,9 @@
+---
+
+- name: Prepare the host for managed Steam Server instance
+  ansible.builtin.import_tasks: installation/00_prepare_host.yaml
+
+- name: Install control scripts for Steam Server instance
+  ansible.builtin.import_tasks: installation/01_install_scripts.yaml
+
+...

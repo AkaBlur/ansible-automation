@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SERVERSCREEN={{ steam_server__screen_name }}
+SERVERDIR={{ steam_server__server_dir }}
+
+cd "${SERVERDIR}"
+
+# command variables
+{% for var in steam_server__cmd_startup_vars %}
+{{ var.name }}={{ var.value }}
+{% endfor %}
+
+# startup command
+screen -dmS "${SERVERSCREEN}" {{ steam_server__cmd_startup_cmd }}

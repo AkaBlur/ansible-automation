@@ -1,0 +1,36 @@
+---
+
+# Default values for role steam_server
+
+# hashed password for the steam user
+steam_server__password_hashed: ""
+
+# content to register as installation onto the server
+#   contains the AppID of the application
+#   and the directory into which it will be installed
+steam_server__content_install:
+  - { app_id: 4020, app_dir: "gmdds" }
+
+# values to pass into the startup script for convenient reuse
+steam_server__cmd_startup_vars:
+  - { name: "MAXPLAYERS", value: 10 }
+
+# startup command that runs the chosen server
+steam_server__cmd_startup_cmd: "gmdds/srcds_run \
+  +maxplayers ${MAXPLAYERS} -console \
+  +gamemode prop_hunt"
+
+# Garry's Mod Setup:
+# run command:
+#
+# gmdds/srcds_run
+# +maxplayers ${MAXPLAYERS} -console
+# +host_workshop_collection ${WORKSHOP_COLLECTION}
+# +gamemode prop_hunt
+# +map ${START_MAP} +sv_setsteamaccount ${STEAM_API_KEY}
+#
+# add all variables accordingly
+# STEAM_API_KEY is acquired as the general Web-API key from Steam directly
+# !needs to be registered to an active account!
+
+...

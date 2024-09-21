@@ -1,0 +1,70 @@
+---
+
+- name: Setup user group
+  become: true
+  ansible.builtin.group:
+    name: "{{ steam_server__group }}"
+    state: present
+
+- name: Setup Steam user
+  become: true
+  ansible.builtin.user:
+    name: "{{ steam_server__user }}"
+    group: "{{ steam_server__group }}"
+    password: "{{ steam_server__password_hashed }}"
+    state: present
+    shell: /bin/bash
+
+- name: Install necessary repositories
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    update_cache: false
+  when: ansible_distribution == "Ubuntu"
+  with_items:
+    - "deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
+    - "deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
+    - "deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse"
+    - "deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse"
+  register: multiverse_installed
+
+- name: Install dpkg i386 architecture
+  become: true
+  ansible.builtin.command: dpkg --add-architecture i386
+  when: ansible_distribution == "Ubuntu"
+  register: architecture_added
+  changed_when: architecture_added.rc == 0
+
+- name: Update apt cache
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+  when: multiverse_installed and architecture_added
+
+# totally legit dpkg hack to agree the license for Steam - thanks GabeN
+- name: Prepare EULA for Steam
+  become: true
+  ansible.builtin.debconf:
+    name: steamcmd
+    question: steam/question
+    vtype: string
+    value: "I AGREE"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install SteamCMD
+  become: true
+  ansible.builtin.package:
+    name: "steamcmd"
+    state: present
+  when: multiverse_installed and architecture_added
+
+- name: Create Steam Server server directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ steam_server__server_dir }}"
+    state: directory
+    owner: "{{ steam_server__user }}"
+    group: "{{ steam_server__group }}"
+    mode: "0755"
+
+...

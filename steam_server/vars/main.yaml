@@ -1,0 +1,12 @@
+---
+
+steam_server__user: steam
+steam_server__group: steam
+
+steam_server__home_dir: "{{ ('/home', steam_server__user) | ansible.builtin.path_join }}"
+steam_server__server_dir: "{{ (steam_server__home_dir, 'steam_server') | ansible.builtin.path_join }}"
+steam_server__app_list: "{{ (steam_server__home_dir, 'applist.txt') | ansible.builtin.path_join }}"
+
+steam_server__screen_name: steam-server
+
+...

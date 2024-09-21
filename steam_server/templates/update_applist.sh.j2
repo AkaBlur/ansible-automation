@@ -1,0 +1,35 @@
+#!/bin/bash
+
+SERVERDIR="{{ steam_server__server_dir }}"
+APPLICATION_LIST="{{ steam_server__app_list }}"
+
+# updates the contents installed via SteamCMD
+update_server() {
+	# given AppID for the application to install
+	APP_ID=$1
+	# directory to install the application into
+	APPLICATION_DIR=$2
+
+	if [ ! -d "${SERVERDIR}/${APPLICATION_DIR}" ]; then
+		mkdir -p "${SERVERDIR}/${APPLICATION_DIR}"
+	fi
+
+	# run SteamCMD to install the application and quit
+	steamcmd +login anonymous +force_install_dir "${SERVERDIR}/${APPLICATION_DIR}" +app_update $APP_ID validate +quit
+}
+
+TMP_FILE="${APPLICATION_LIST}.tmp"
+
+cat "${APPLICATION_LIST}" | grep -vE "(^#)" > "${TMP_FILE}"
+
+while IFS= read -r LIST_ITEM; do
+	APP_ID="${LIST_ITEM%%/*}"
+	APP_DIR="${LIST_ITEM#*/}"
+
+	update_server "${APP_ID}" "${APP_DIR}"
+
+done < "${TMP_FILE}"
+
+rm "${TMP_FILE}"
+
+exit 0

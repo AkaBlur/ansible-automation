@@ -1,0 +1,8 @@
+---
+
+- name: Install a Steam Server instance on a managed host
+  hosts: "{{ vm_hosts | default([]) }}"
+  roles:
+    - role: steam_server
+
+...

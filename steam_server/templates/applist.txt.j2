@@ -1,0 +1,10 @@
+# put the applications in here that need to be installed
+# e.g.:
+# 
+# 4020/gmdds
+#
+# - this will install the GMod server (AppID: 4020)
+#   into the directory "gmdds" inside your server directory
+{% for app in steam_server__content_install %}
+{{ app.app_id }}/{{ app.app_dir }}
+{% endfor %}

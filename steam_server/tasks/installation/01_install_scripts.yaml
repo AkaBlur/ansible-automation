@@ -1,0 +1,30 @@
+---
+
+- name: Copy the main Install and Update script
+  become: true
+  ansible.builtin.template:
+    src: update_applist.sh.j2
+    dest: "{{ (steam_server__home_dir, 'update_applist.sh') | ansible.builtin.path_join }}"
+    owner: "{{ steam_server__user }}"
+    group: "{{ steam_server__group }}"
+    mode: "0755"
+
+- name: Copy the application list
+  become: true
+  ansible.builtin.template:
+    src: applist.txt.j2
+    dest: "{{ steam_server__app_list }}"
+    owner: "{{ steam_server__user }}"
+    group: "{{ steam_server__group }}"
+    mode: "0644"
+
+- name: Copy the startup script
+  become: true
+  ansible.builtin.template:
+    src: start_server.sh.j2
+    dest: "{{ (steam_server__home_dir, 'start_server.sh') | ansible.builtin.path_join }}"
+    owner: "{{ steam_server__user }}"
+    group: "{{ steam_server__group }}"
+    mode: "0755"
+
+...
