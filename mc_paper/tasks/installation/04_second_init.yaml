@@ -8,12 +8,19 @@
     state: started
   timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
 
+- name: Wait for PaperMC server
+  become: true
+  ansible.builtin.wait_for:
+    port: "{{ mc__option_server_port }}"
+    host: "{{ mc__option_server_ip }}"
+    state: started
+
 - name: Stop Minecraft Server
   become: true
-  ansible.builtin.service:
-    name: "{{ mc__mc_service_file }}"
-    enabled: true
-    state: stopped
-  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+  ansible.builtin.command:
+    cmd: "sudo -u {{ mc__mc_user }} ./{{ mc__control_script_name }} terminate"
+    chdir: "{{ mc__mc_home_dir }}"
+  register: mc_terminate
+  changed_when: mc_terminate.rc == 0
 
 ...

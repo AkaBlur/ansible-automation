@@ -1,0 +1,12 @@
+---
+
+- name: Manage a PaperMC Minecraft Instance on hosts
+  # NO become: true allowed to be added!
+  # https://github.com/ansible/ansible/issues/83316
+  # escalating ansible.builtin.script produces an empty entry from the PW
+  # -> not allowed on this role!
+  hosts: "{{ vm_hosts | default([]) }}"
+  roles:
+    - role: mc_paper
+
+...

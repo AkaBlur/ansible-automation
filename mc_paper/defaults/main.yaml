@@ -60,6 +60,6 @@ mc__copy_gid: 1000
 # Telegram Chat options for sending a message after checking update
 mc__send_telegram_msg: false
 mc__telegram_api_token: 0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-mc__telegram_chat_id: 000000000
+mc__telegram_chat_id: 0
 
 ...

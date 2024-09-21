@@ -37,6 +37,12 @@ stop_server() {
         printf "Stopped Server successfully\n"
 }
 
+terminate_server() {
+        screen -S $SERVERSCREEN -X stuff "say TERMINATING SERVER^M"
+        screen -S $SERVERSCREEN -X stuff "stop^M"
+        printf "Stopped Server successfully\n"
+}
+
 send_message() {
         printf "Sending message: \n"
         printf "$1\n"
@@ -74,18 +80,21 @@ if [ $# != 1 -a $# != 2 ]; then
         exit 0
 fi
 
-if [ "$MODE" == "start" ];then
-        if [ ! -z "$SCREENSTATE" ];then
+if [ "$MODE" == "start" ]; then
+        if [ ! -z "$SCREENSTATE" ]; then
                 printf "Screen is already running!\n"
                 exit 1
         fi
         start_server
         exit 0
-elif [ "$MODE" == "stop" ];then
+elif [ "$MODE" == "stop" ]; then
         stop_server
         exit 0
-elif [ "$MODE" == "msg" ];then
+elif [ "$MODE" == "msg" ]; then
         send_message "$2"
+        exit 0
+elif [ "$MODE" == "terminate" ]; then
+        terminate_server
         exit 0
 else
         print_wrong
