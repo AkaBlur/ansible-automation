@@ -11,7 +11,7 @@
 - name: Run save script
   become: true
   ansible.builtin.command:
-    cmd: sudo -u minecraft "{{ ('.', mc__save_script_name) | ansible.builtin.path_join }}"
+    cmd: sudo -u "{{ mc__mc_user }}" "{{ ('.', mc__save_script_name) | ansible.builtin.path_join }}"
     chdir: "{{ mc__mc_home_dir }}"
   register: mc_save_out
 

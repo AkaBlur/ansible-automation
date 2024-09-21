@@ -14,6 +14,7 @@
     group: "{{ mc__mc_group }}"
     password: "{{ mc__password_hashed }}"
     state: present
+    shell: /bin/bash
 
 - name: Setup server directory
   become: true

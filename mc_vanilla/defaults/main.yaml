@@ -3,31 +3,40 @@
 # Defaults for mc_vanilla
 
 # Possible modes
+# Install a Minecraft instance
 mc_install: false
+# Start a managed instance
 mc_start: false
+# Stop a managed instance
 mc_stop: false
+# Restart a managed instance
 mc_restart: false
+# Check for updates on a managed instance
 mc_check_update: false
+# Update a managed instance
 mc_do_update: false
+# Save the world on a managed instance
 mc_do_save: false
+# Copy a saved world from the server somewhere else
 mc_do_copy_world: false
 
-# basic options
+# Basic server options
+# Java version to install
 mc__openjdk_version: 21
+# Accept the EULA
 mc__accept_eula: true
-# this needs to be set by the user
+# hashed password for the user that is set up on the managed instance
 mc__password_hashed: ""
 
-# target version
-# either 'latest' or specific version number (e.g. 1.20)
+# Minecraft server options
+# version to install; either 'latest' or specific version number (e.g. 1.20)
 mc__mc_target_version: latest
-
 # initial RAM amount
 mc__ramsize_min_init: 1024M
 # maximum RAM amount
 mc__ramsize_max: 1024M
 
-# server.properties related options
+# server.properties related options; named after the respecting entries
 mc__option_difficulty: normal
 mc__option_gamemode: survival
 mc__option_world_name: newmc
@@ -37,13 +46,15 @@ mc__option_online_mode: true
 mc__option_pvp: true
 mc__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
 
-# optional copy destination to where world will be copied
-mc__copy_location: "/mnt/backup"
+# Optional server settings
+# copy destination for the copy operation
+mc__copy_location: "/tmp"
 # UID and GID of user for copy location
 mc__copy_uid: 1000
-mc__copy_gid: 100
+mc__copy_gid: 1000
 
 # Telegram Chat options for sending a message after checking update
+mc__send_telegram_msg: false
 mc__telegram_api_token: 0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 mc__telegram_chat_id: 000000000
 
