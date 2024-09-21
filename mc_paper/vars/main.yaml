@@ -1,0 +1,31 @@
+---
+
+# Variables for mc_vanilla
+
+# host-related items
+# user management
+mc__mc_user: mcpaper
+mc__mc_group: mcpaper
+mc__mc_server_dir_name: mc_paper_server
+
+# user file-system
+mc__mc_home_dir: "{{ ('/home', mc__mc_user) | ansible.builtin.path_join }}"
+mc__mc_server_dir: "{{ ('/home', mc__mc_user, mc__mc_server_dir_name) | ansible.builtin.path_join }}"
+mc__mc_server_jar: "{{ (mc__mc_server_dir, 'paper.jar') | ansible.builtin.path_join }}"
+mc__mc_server_jar_update: "{{ (mc__mc_server_dir, 'paper.jar.update') | ansible.builtin.path_join }}"
+mc__mc_server_version_file: "{{ (mc__mc_server_dir, '.ansible_mc_version') | ansible.builtin.path_join }}"
+
+# hosts systemd items
+mc__systemd_dir: /etc/systemd/system
+mc__mc_service_file: minecraft-paper-server.service
+
+# Minecraft-related items
+mc__option_enforce_whitelist: true
+mc__option_whitelist: true
+mc__option_server_port: 25565
+
+# Minecraft .service-related items
+mc__service_timeout: 120
+mc__screen_name: minecraft-server
+mc__control_script_name: mc_server_control.sh
+mc__save_script_name: mc_server_save_world.sh

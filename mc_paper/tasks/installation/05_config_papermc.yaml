@@ -1,0 +1,35 @@
+---
+
+- name: Enable PaperMC Velocity backend
+  become: true
+  yedit:
+    src: "{{ (mc__mc_server_dir, 'config', 'paper-global.yml') | ansible.builtin.path_join }}"
+    key: proxies.velocity.enabled
+    value: true
+  when: mc__prepare_velocity_backend
+
+- name: Enable online mode on backend
+  become: true
+  yedit:
+    src: "{{ (mc__mc_server_dir, 'config', 'paper-global.yml') | ansible.builtin.path_join }}"
+    key: proxies.velocity.online-mode
+    value: true
+  when: mc__prepare_velocity_backend
+
+- name: Set PaperMC Velocity shared secret
+  become: true
+  yedit:
+    src: "{{ (mc__mc_server_dir, 'config', 'paper-global.yml') | ansible.builtin.path_join }}"
+    key: proxies.velocity.secret
+    value: "{{ mc__velocity_shared_secret }}"
+  when: mc__prepare_velocity_backend
+
+- name: Change PaperMC global config ownership again
+  become: true
+  ansible.builtin.file:
+    path: "{{ (mc__mc_server_dir, 'config', 'paper-global.yml') | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0644"
+
+...

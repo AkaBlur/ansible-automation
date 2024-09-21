@@ -1,0 +1,52 @@
+---
+
+# Sets up host for usage as Minecraft Server
+- name: Setup user group
+  become: true
+  ansible.builtin.group:
+    name: "{{ mc__mc_group }}"
+    state: present
+
+- name: Setup Minecraft PaperMC user
+  become: true
+  ansible.builtin.user:
+    name: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    password: "{{ mc__password_hashed }}"
+    state: present
+    shell: /bin/bash
+
+- name: Setup server directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ mc__mc_server_dir }}"
+    state: directory
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+
+- name: Install Java SDK
+  become: true
+  ansible.builtin.package:
+    name: "openjdk-{{ mc__openjdk_version }}-jre-headless"
+    state: present
+
+- name: Copy Server control script to host
+  become: true
+  ansible.builtin.template:
+    src: "mc_server_control.sh.j2"
+    dest: "{{ (mc__mc_home_dir, mc__control_script_name) | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+
+- name: Copy Server save script to host
+  become: true
+  ansible.builtin.template:
+    src: "mc_server_save_world.sh.j2"
+    dest: "{{ (mc__mc_home_dir, mc__save_script_name) | ansible.builtin.path_join }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+
+...

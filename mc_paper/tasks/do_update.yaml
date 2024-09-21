@@ -1,0 +1,64 @@
+---
+
+# latest server.jar file from Mojang
+- name: Minecraft Server Download URL
+  ansible.builtin.script: mc_paper_info.py --version "{{ mc__mc_target_version }}"
+  args:
+    executable: python3
+  register: mc_server_data
+
+# download latest server jar as update file
+- name: GET Minecraft Server
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ mc_server_data.stdout_lines[0] }}"
+    dest: "{{ mc__mc_server_jar_update }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+    force: true
+
+# reduced downtime:
+# stop -> copy file -> start
+- name: Stop Minecraft Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: stopped
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Apply update
+  become: true
+  ansible.builtin.copy:
+    src: "{{ mc__mc_server_jar_update }}"
+    dest: "{{ mc__mc_server_jar }}"
+    owner: "{{ mc__mc_user }}"
+    group: "{{ mc__mc_group }}"
+    mode: "0755"
+    remote_src: true
+
+- name: Start Minecraft Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: started
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Remove update file
+  become: true
+  ansible.builtin.file:
+    path: "{{ mc__mc_server_jar_update }}"
+    state: absent
+
+- name: Create managed version file
+  become: true
+  ansible.builtin.template:
+    src: .ansible_mc_version.j2
+    dest: "{{ mc__mc_server_version_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+...

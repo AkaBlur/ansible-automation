@@ -1,0 +1,19 @@
+---
+
+- name: Start PaperMC service to generate initial configuration files
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: started
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+- name: Stop Minecraft Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc__mc_service_file }}"
+    enabled: true
+    state: stopped
+  timeout: "{{ (mc__service_timeout + 30) | int | abs }}"
+
+...

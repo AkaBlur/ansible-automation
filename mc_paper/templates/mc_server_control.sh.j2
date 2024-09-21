@@ -1,0 +1,95 @@
+#!/bin/bash
+
+SCRIPT_NAME=$0
+MODE=$1
+
+SERVERSCREEN="{{ mc__screen_name }}"
+SCREENSTATE=$(screen -ls | grep "$SERVERSCREEN")
+
+HOMEDIR="{{ mc__mc_home_dir }}"
+SERVERDIR="{{ mc__mc_server_dir_name }}"
+
+start_server() {
+        printf "Starting Minecraft Server on Screen - $SERVERSCREEN\n"
+        screen -dmS $SERVERSCREEN java -Xmx{{ mc__ramsize_min_init }} -Xms{{ mc__ramsize_max }} -jar paper.jar nogui
+}
+
+stop_server() {
+        printf "Stopping Minecraft Server\n"
+        screen -S $SERVERSCREEN -X stuff "say MAINTANANCE - SHUTTING DOWN SERVER^M"
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 30 s^M"
+        sleep 20
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 10 s^M"
+        sleep 5
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 5 s^M"
+        sleep 1
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 4 s^M"
+        sleep 1
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 3 s^M"
+        sleep 1
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 2 s^M"
+        sleep 1
+        screen -S $SERVERSCREEN -X stuff "say Shutdown in 1 s^M"
+        sleep 1
+        screen -S $SERVERSCREEN -X stuff "say SHUTTING DOWN...^M"
+        screen -S $SERVERSCREEN -X stuff "stop^M"
+        sleep 60
+        printf "Stopped Server successfully\n"
+}
+
+send_message() {
+        printf "Sending message: \n"
+        printf "$1\n"
+        screen -S $SERVERSCREEN -X stuff "say $1^M"
+}
+
+print_usage() {
+        printf "Usage: $SCRIPT_NAME CMD [MESSAGE]\n\n\
+\tCMD\t = Command to execute - either 'start', 'stop' or 'msg'\n\n\
+\tMESSAGE\t = Message to send, works only with 'msg'\n\n"
+}
+
+print_wrong() {
+        printf "Wrong arguments!\n"
+        printf "\tAllowed: start stop msg\n"
+}
+
+########
+# MAIN #
+########
+if [ "$(pwd)" != "$HOMEDIR" ]; then
+        printf "Script not inside user directory!\nAborting!\n"
+        exit 1
+fi
+
+if [ ! -d "$SERVERDIR" ]; then
+        printf "Server not found!\nAborting!\n"
+        exit 1
+fi
+
+cd $SERVERDIR
+
+if [ $# != 1 -a $# != 2 ]; then
+        print_usage
+        exit 0
+fi
+
+if [ "$MODE" == "start" ];then
+        if [ ! -z "$SCREENSTATE" ];then
+                printf "Screen is already running!\n"
+                exit 1
+        fi
+        start_server
+        exit 0
+elif [ "$MODE" == "stop" ];then
+        stop_server
+        exit 0
+elif [ "$MODE" == "msg" ];then
+        send_message "$2"
+        exit 0
+else
+        print_wrong
+        exit 1
+fi
+
+exit 0

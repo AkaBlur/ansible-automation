@@ -1,0 +1,78 @@
+---
+
+- name: Check latest server version
+  ansible.builtin.script: mc_paper_info.py --version "{{ mc__mc_target_version }}"
+  args:
+    executable: python3
+  register: mc_version_data
+
+- name: Get Ansible Minecraft version info
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ mc__mc_server_version_file }}"
+  register: mc_version_file_slurp
+
+# PaperMC build version check
+- name: Installed PaperMC build
+  ansible.builtin.set_fact:
+    mc__host_installed_paper_build: "{{ mc_version_file_slurp['content'] |
+      ansible.builtin.b64decode |
+      ansible.builtin.regex_search('^LatestPaperBuildCheck=(.*)', '\\1', multiline = True) |
+      first }}"
+
+- name: PaperMC build check
+  ansible.builtin.set_fact:
+    mc__instance_paper_update: false
+
+- name: PaperMC update applicable
+  ansible.builtin.set_fact:
+    mc__instance_paper_update: true
+  when: (mc__host_installed_paper_build != mc_version_data.stdout_lines[2])
+
+- name: Set new PaperMC build check
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ mc__mc_server_version_file }}"
+    regexp: '^LatestPaperBuildCheck='
+    line: "LatestPaperBuildCheck={{ mc_version_data.stdout_lines[2] }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Notify via Telegram Bot for new PaperMC build
+  community.general.telegram:
+    token: "{{ mc__telegram_api_token }}"
+    api_args:
+      chat_id: "{{ mc__telegram_chat_id }}"
+      parse_mode: "MarkdownV2"
+      text: "*Ansible*\nManaged PaperMC Instance can be updated to new PaperMC Build\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
+  when: (mc__send_telegram_msg and mc__instance_paper_update)
+
+# main Minecraft version check
+- name: Installed Minecraft Version
+  ansible.builtin.set_fact:
+    mc__host_installed_version: "{{ mc_version_file_slurp['content'] |
+      ansible.builtin.b64decode |
+      ansible.builtin.regex_search('^Installed=(.*)', '\\1', multiline = True) |
+      first }}"
+
+- name: Update check
+  ansible.builtin.set_fact:
+    mc__instance_updatable: false
+
+- name: Update applicable
+  ansible.builtin.set_fact:
+    mc__instance_updatable: true
+  when: (mc__host_installed_version != mc_version_data.stdout_lines[1] and mc__mc_target_version == "latest") or
+        (mc__host_installed_version != mc__mc_target_version and mc__mc_target_version != "latest")
+
+- name: Notify via Telegram Bot for new Minecraft version
+  community.general.telegram:
+    token: "{{ mc__telegram_api_token }}"
+    api_args:
+      chat_id: "{{ mc__telegram_chat_id }}"
+      parse_mode: "MarkdownV2"
+      text: "*Ansible*\nManaged PaperMC Instance can be updated to new Minecraft Version\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
+  when: (mc__send_telegram_msg and mc__instance_updatable)
+
+...

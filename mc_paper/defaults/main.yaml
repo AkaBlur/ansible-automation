@@ -1,0 +1,65 @@
+---
+
+# Defaults for mc_vanilla
+
+# Possible modes
+# Install a Minecraft instance
+mc_install: false
+# Start a managed instance
+mc_start: false
+# Stop a managed instance
+mc_stop: false
+# Restart a managed instance
+mc_restart: false
+# Check for updates on a managed instance
+mc_check_update: false
+# Update a managed instance
+mc_do_update: false
+# Save the world on a managed instance
+mc_do_save: false
+# Copy a saved world from the server somewhere else
+mc_do_copy_world: false
+
+# Basic server options
+# Java version to install
+mc__openjdk_version: 21
+# Accept the EULA
+mc__accept_eula: true
+# hashed password for the user that is set up on the managed instance
+mc__password_hashed: ""
+
+# Minecraft server options
+# version to install; either 'latest' or specific version number (e.g. 1.20)
+mc__mc_target_version: latest
+# enable this server to be serving as a backend for a Velocity instance
+# WARNING: this will put the server into offline-mode!
+mc__prepare_velocity_backend: true
+# PaperMC - Velocity shared secret
+mc__velocity_shared_secret: XXXXXXXXXXXXXX
+# initial RAM amount
+mc__ramsize_min_init: 1024M
+# maximum RAM amount
+mc__ramsize_max: 1024M
+
+# server.properties related options; named after the respecting entries
+mc__option_difficulty: normal
+mc__option_gamemode: survival
+mc__option_world_name: newmc
+mc__option_max_players: 10
+mc__option_motd: "Automated Minecraft instancing brought to you by Ansible"
+mc__option_pvp: true
+mc__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+# Optional server settings
+# copy destination for the copy operation
+mc__copy_location: "/tmp"
+# UID and GID of user for copy location
+mc__copy_uid: 1000
+mc__copy_gid: 1000
+
+# Telegram Chat options for sending a message after checking update
+mc__send_telegram_msg: false
+mc__telegram_api_token: 0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+mc__telegram_chat_id: 000000000
+
+...

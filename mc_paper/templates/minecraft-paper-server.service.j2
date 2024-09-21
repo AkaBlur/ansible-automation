@@ -1,0 +1,15 @@
+[Unit]
+Description=Minecraft PaperMC Server Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User={{ mc__mc_user }}
+ExecStart=/bin/bash -c "cd {{ mc__mc_home_dir }} && ./{{ mc__control_script_name }} start"
+ExecStop=/bin/bash -c "cd {{ mc__mc_home_dir }} && ./{{ mc__control_script_name }} stop"
+RemainAfterExit=yes
+TimeoutStopSec={{ mc__service_timeout }}
+
+[Install]
+WantedBy=multi-user.target
