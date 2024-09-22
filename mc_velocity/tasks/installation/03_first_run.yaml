@@ -1,0 +1,26 @@
+---
+
+- name: Start Velocity service to generate initial configuration files
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc_velocity__service_file }}"
+    enabled: true
+    state: started
+  timeout: "{{ (mc_velocity__service_timeout + 30) | int | abs }}"
+
+- name: Wait for PaperMC Velocity proxy
+  become: true
+  ansible.builtin.wait_for:
+    port: "{{ mc_velocity__option_server_port }}"
+    host: "{{ mc_velocity__option_server_ip }}"
+    state: started
+
+- name: Stop Velocity Proxy
+  become: true
+  ansible.builtin.command:
+    cmd: "sudo -u {{ mc_velocity__user }} ./{{ mc_velocity__control_script_name }} stop"
+    chdir: "{{ mc_velocity__home_dir }}"
+  register: mc_terminate
+  changed_when: mc_terminate.rc == 0
+
+...

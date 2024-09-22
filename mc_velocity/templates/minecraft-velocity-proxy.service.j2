@@ -1,0 +1,15 @@
+[Unit]
+Description=Minecraft PaperMC Velocity Proxy Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User={{ mc_velocity__user }}
+ExecStart=/bin/bash -c "cd {{ mc_velocity__home_dir }} && ./{{ mc_velocity__control_script_name }} start"
+ExecStop=/bin/bash -c "cd {{ mc_velocity__home_dir }} && ./{{ mc_velocity__control_script_name }} stop"
+RemainAfterExit=yes
+TimeoutStopSec={{ mc_velocity__service_timeout }}
+
+[Install]
+WantedBy=multi-user.target

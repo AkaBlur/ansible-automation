@@ -1,0 +1,68 @@
+#!/bin/bash
+
+SCRIPT_NAME=$0
+MODE=$1
+
+SERVERSCREEN="{{ mc_velocity__screen_name }}"
+SCREENSTATE=$(screen -ls | grep "${SERVERSCREEN}")
+
+HOMEDIR="{{ mc_velocity__home_dir }}"
+SERVERDIR="{{ mc_velocity__server_dir }}"
+
+start_server() {
+        printf "Starting Velocity Proxy Server on Screen - ${SERVERSCREEN}\n"
+        screen -dmS ${SERVERSCREEN} java -Xms{{ mc_velocity__proxy_min_ram }} -Xmx{{ mc_velocity__proxy_max_ram }} -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15 -jar {{ mc_velocity__velocity_jar }}
+}
+
+stop_server() {
+        printf "Stopping Velocity Proxy\n"
+        screen -S ${SERVERSCREEN} -X stuff "stop^M"
+        printf "Stopped Server successfully\n"
+}
+
+print_usage() {
+        printf "Usage: ${SCRIPT_NAME} CMD\n\n\
+\tCMD\t = Command to execute - either 'start' or 'stop'\n\n"
+}
+
+print_wrong() {
+        printf "Wrong arguments!\n"
+        printf "\tAllowed: start stop\n"
+}
+
+########
+# MAIN #
+########
+if [ "$(pwd)" != "${HOMEDIR}" ]; then
+        printf "Script not inside user directory!\nAborting!\n"
+        exit 1
+fi
+
+if [ ! -d "${SERVERDIR}" ]; then
+        printf "Server not found!\nAborting!\n"
+        exit 1
+fi
+
+cd ${SERVERDIR}
+
+if [ $# != 1 -a $# != 2 ]; then
+        print_usage
+        exit 0
+fi
+
+if [ "${MODE}" == "start" ];then
+        if [ ! -z "${SCREENSTATE}" ];then
+                printf "Screen is already running!\n"
+                exit 1
+        fi
+        start_server
+        exit 0
+elif [ "${MODE}" == "stop" ];then
+        stop_server
+        exit 0
+else
+        print_wrong
+        exit 1
+fi
+
+exit 0

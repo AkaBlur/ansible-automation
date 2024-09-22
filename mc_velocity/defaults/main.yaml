@@ -1,0 +1,31 @@
+---
+
+# Defaults for Minecraft Velocity proxy server setup
+
+# hashed password for the Velocity user
+mc_velocity__password_hashed: ""
+
+# Java version to install on host
+mc_velocity__openjdk_version: 21
+
+# proxy server options
+# minimum / inital RAM amount for server
+mc_velocity__proxy_min_ram: 512M
+# maximum RAM amount for server
+mc_velocity__proxy_max_ram: 512M
+# version of velocity to install
+# can either be 'latest' or a specific version (e.g. 340-SNAPSHOT)
+mc_velocity__target_version: latest
+
+# Velocity related options for the proxy
+# Port to run the proxy on
+mc_velocity__option_server_port: 25565
+# IP of the instance, generally set to the hosts IP
+mc_velocity__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+mc_velocity__config_entries:
+  - { key: "bind", value: "{{ mc_velocity__option_server_ip }}:{{ mc_velocity__option_server_port }}" }
+
+# mc_velocity__
+
+...

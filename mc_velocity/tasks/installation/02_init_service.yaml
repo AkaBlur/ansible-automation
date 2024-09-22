@@ -1,0 +1,20 @@
+---
+
+- name: Copy .service template to host
+  become: true
+  ansible.builtin.template:
+    src: minecraft-velocity-proxy.service.j2
+    dest: "{{ (mc_velocity__systemd_dir, mc_velocity__service_file) | ansible.builtin.path_join }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable service on host
+  become: true
+  ansible.builtin.systemd_service:
+    daemon-reload: true
+    name: "{{ mc_velocity__service_file }}"
+    state: stopped
+    enabled: true
+
+...

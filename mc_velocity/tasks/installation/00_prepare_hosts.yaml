@@ -1,0 +1,43 @@
+---
+
+# Sets up host for usage as Minecraft Server
+- name: Setup user group
+  become: true
+  ansible.builtin.group:
+    name: "{{ mc_velocity__group }}"
+    state: present
+
+- name: Setup Velocity user
+  become: true
+  ansible.builtin.user:
+    name: "{{ mc_velocity__user }}"
+    group: "{{ mc_velocity__group }}"
+    password: "{{ mc_velocity__password_hashed }}"
+    state: present
+    shell: /bin/bash
+
+- name: Setup server directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ mc_velocity__server_dir }}"
+    state: directory
+    owner: "{{ mc_velocity__user }}"
+    group: "{{ mc_velocity__group }}"
+    mode: "0755"
+
+- name: Install Java SDK
+  become: true
+  ansible.builtin.package:
+    name: "openjdk-{{ mc_velocity__openjdk_version }}-jre-headless"
+    state: present
+
+- name: Copy Server control script to host
+  become: true
+  ansible.builtin.template:
+    src: "mc_velocity_control.sh.j2"
+    dest: "{{ (mc_velocity__home_dir, mc_velocity__control_script_name) | ansible.builtin.path_join }}"
+    owner: "{{ mc_velocity__user }}"
+    group: "{{ mc_velocity__group }}"
+    mode: "0755"
+
+...

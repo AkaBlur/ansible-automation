@@ -1,3 +1,4 @@
 ansible==10.1.0
 ansible-dev-tools==24.6.1
 passlib==1.7.4
+click==8.1.7
