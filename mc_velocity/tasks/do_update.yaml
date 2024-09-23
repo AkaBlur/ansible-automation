@@ -1,0 +1,60 @@
+---
+
+- name: PaperMC Velocity Server Download URL
+  ansible.builtin.script: mc_velocity_info.py --version "{{ mc__mc_target_version }}"
+  args:
+    executable: python3
+  register: mc_velocity_data
+
+- name: GET PaperMC Velocity Server
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ mc_velocity_data.stdout_lines[0] }}"
+    dest: "{{ (mc_velocity__server_dir, mc_velocity__velocity_jar_update) | ansible.builtin.path_join }}"
+    owner: "{{ mc_velocity__user }}"
+    group: "{{ mc_velocity__group }}"
+    mode: "0755"
+    force: true
+
+- name: Stop PaperMC Velocity Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc_velocity__service_file }}"
+    enabled: true
+    state: stopped
+  timeout: "{{ (mc_velocity__service_timeout + 30) | int | abs }}"
+
+- name: Apply update
+  become: true
+  ansible.builtin.copy:
+    src: "{{ (mc_velocity__server_dir, mc_velocity__velocity_jar_update) | ansible.builtin.path_join }}"
+    dest: "{{ (mc_velocity__server_dir, mc_velocity__velocity_jar) | ansible.builtin.path_join }}"
+    owner: "{{ mc_velocity__user }}"
+    group: "{{ mc_velocity__group }}"
+    mode: "0755"
+    remote_src: true
+
+- name: Start PaperMC Velocity Server
+  become: true
+  ansible.builtin.service:
+    name: "{{ mc_velocity__service_file }}"
+    enabled: true
+    state: started
+  timeout: "{{ (mc_velocity__service_timeout + 30) | int | abs }}"
+
+- name: Remove update file
+  become: true
+  ansible.builtin.file:
+    path: "{{ mc_velocity__velocity_jar_update }}"
+    state: absent
+
+- name: Create managed version file
+  become: true
+  ansible.builtin.template:
+    src: .ansible_mc_version.j2
+    dest: "{{ mc_velocity__version_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+...

@@ -20,7 +20,7 @@
   become: true
   ansible.builtin.template:
     src: .ansible_mc_version.j2
-    dest: "{{ (mc_velocity__server_dir, '.ansible_mc_version') | ansible.builtin.path_join }}"
+    dest: "{{ mc_velocity__version_file }}"
     owner: root
     group: root
     mode: "0644"

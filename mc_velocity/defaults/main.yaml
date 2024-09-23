@@ -2,6 +2,13 @@
 
 # Defaults for Minecraft Velocity proxy server setup
 
+# install Velocity
+mc_velocity_install: false
+# check for Velocity update
+mc_velocity_check_update: false
+# install updated Velocity version
+mc_velocity_do_update: false
+
 # hashed password for the Velocity user
 mc_velocity__password_hashed: ""
 
@@ -25,6 +32,10 @@ mc_velocity__option_server_ip: "{{ hostvars[inventory_hostname]['ansible_default
 
 mc_velocity__config_entries:
   - { key: "bind", value: "{{ mc_velocity__option_server_ip }}:{{ mc_velocity__option_server_port }}" }
+
+mc_velocity__send_telegram_msg: false
+mc_velocity__telegram_api_token: 0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+mc_velocity__telegram_chat_id: 0
 
 # mc_velocity__
 

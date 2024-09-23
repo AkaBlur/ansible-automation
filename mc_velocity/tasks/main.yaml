@@ -1,15 +1,15 @@
 ---
 
-- name: Prepare hosts for Minecraft Velocity proxy deployment
-  ansible.builtin.import_tasks: installation/00_prepare_hosts.yaml
+- name: Install a managed PaperMC Velocity Proxy instance
+  ansible.builtin.import_tasks: do_install.yaml
+  when: mc_velocity_install
 
-- name: Download Velocity onto host
-  ansible.builtin.import_tasks: installation/01_velocity_download.yaml
+- name: Check for update on PaperMC Velocity Proxy instance
+  ansible.builtin.import_tasks: check_update.yaml
+  when: mc_velocity_check_update
 
-- name: Initialize Minecraft Velocity Service on host
-  ansible.builtin.import_tasks: installation/02_init_service.yaml
-
-- name: First run
-  ansible.builtin.import_tasks: installation/03_first_run.yaml
+- name: Update a PaperMC Velocity Proxy instance
+  ansible.builtin.import_tasks: do_update.yaml
+  when: mc_velocity_do_update
 
 ...

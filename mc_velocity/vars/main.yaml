@@ -7,14 +7,16 @@ mc_velocity__systemd_dir: /etc/systemd/system
 
 mc_velocity__home_dir: "{{ ('/home', mc_velocity__user) | ansible.builtin.path_join }}"
 mc_velocity__server_dir: "{{ (mc_velocity__home_dir, 'mc_velocity') | ansible.builtin.path_join }}"
+mc_velocity__version_file: "{{ (mc_velocity__server_dir, '.ansible_mc_version') | ansible.builtin.path_join }}"
 
-mc_velocity__velocity_jar: velocity.jar
 mc_velocity__screen_name: velocity-proxy
+mc_velocity__velocity_jar: velocity.jar
+mc_velocity__velocity_jar_update: velocity.jar.update
 
 mc_velocity__control_script_name: mc_velocity_control.sh
 
-mc_velocity__service_timeout: 60
 mc_velocity__service_file: minecraft-velocity-proxy.service
+mc_velocity__service_timeout: 60
 
 # mc_velocity__
 

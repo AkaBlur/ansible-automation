@@ -1,0 +1,41 @@
+---
+
+- name: Check latest proxy version
+  ansible.builtin.script: mc_velocity_info.py --version "{{ mc_velocity__target_version }}"
+  args:
+    executable: python3
+  register: mc_version_data
+
+- name: Get Ansible PapperMC Velocity version info
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ mc_velocity__version_file }}"
+  register: mc_version_file_slurp
+
+- name: Installed PaperMC Velocity version
+  ansible.builtin.set_fact:
+    mc__host_installed_version: "{{ mc_version_file_slurp['content'] |
+      ansible.builtin.b64decode |
+      ansible.builtin.regex_search('^Installed=(.*)', '\\1', multiline = True) |
+      first }}"
+
+- name: Update check
+  ansible.builtin.set_fact:
+    mc__instance_updatable: false
+
+- name: Update applicable
+  ansible.builtin.set_fact:
+    mc__instance_updatable: true
+  when: (mc__host_installed_version != mc_version_data.stdout_lines[0] and mc_velocity__target_version == "latest") or
+        (mc__host_installed_version != mc_velocity__target_version and mc_velocity__target_version != "latest")
+
+- name: Notify via Telegram Bot
+  community.general.telegram:
+    token: "{{ mc_velocity__telegram_api_token }}"
+    api_args:
+      chat_id: "{{ mc_velocity__telegram_chat_id }}"
+      parse_mode: "MarkdownV2"
+      text: "*Ansible*\nManaged PaperMC Velocity Instance can be updated\n\t*{{ inventory_hostname }}*\n\t{{ ansible_default_ipv4.address | regex_escape() }}"
+  when: mc__instance_updatable and mc_velocity__send_telegram_msg
+
+...
