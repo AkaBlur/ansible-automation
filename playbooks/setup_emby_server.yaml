@@ -4,7 +4,7 @@
   hosts: testingvms
   pre_tasks:
     - name: Get latest Emby server version
-      ansible.builtin.script: emby_get_latest_server.py
+      ansible.builtin.script: emby/emby_get_latest_server.py
       args:
         executable: python3
       register: emby_server_version_output
@@ -25,7 +25,7 @@
     - name: Generate RAMDISK script
       become: true
       ansible.builtin.template:
-        src: mount_transcode_ramdisk.sh.j2
+        src: emby/mount_transcode_ramdisk.sh.j2
         dest: /root/mount_transcode_ramdisk.sh
         owner: root
         group: root
