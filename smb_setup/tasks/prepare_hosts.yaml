@@ -1,0 +1,27 @@
+---
+
+- name: Install requirements
+  ansible.builtin.package:
+    name: "{{ dependencies_install }}"
+    state: present
+  become: true
+
+- name: Add host entry
+  ansible.builtin.lineinfile:
+    path: "{{ file_hosts }}"
+    line: "{{ hosts_entry }}"
+    create: true
+    mode: "0644"
+  become: true
+
+- name: Create mount point directory
+  ansible.builtin.file:
+    path: "{{ (smb__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ smb__targets }}"
+  become: true
+
+...

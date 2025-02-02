@@ -4,6 +4,8 @@
 smb__user: user
 smb__pass: password
 
+smb__mount_temp: false
+
 smb__mount_dir: /media
 smb__server_ip: 10.0.0.2
 smb__server_name: FILES

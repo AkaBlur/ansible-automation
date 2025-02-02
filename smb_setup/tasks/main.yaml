@@ -1,74 +1,14 @@
 ---
 
-# tasks for smb_setup
-- name: Install requirements
-  ansible.builtin.package:
-    name: "{{ dependencies_install }}"
-    state: present
-  become: true
+- name: Prepare host for SMB
+  ansible.builtin.import_tasks: prepare_hosts.yaml
 
-- name: Add host entry
-  ansible.builtin.lineinfile:
-    path: "{{ file_hosts }}"
-    line: "{{ hosts_entry }}"
-    create: true
-    mode: "0644"
-  become: true
+- name: Install SMB mount as service
+  ansible.builtin.import_tasks: mount_service.yaml
+  when: not smb__mount_temp
 
-- name: Write SMB credentials to host
-  ansible.builtin.copy:
-    content: |
-      username={{ smb__user }}
-      password={{ smb__pass }}
-    dest: "{{ (path_etc, file_smb_creds) | ansible.builtin.path_join }}"
-    owner: root
-    group: root
-    mode: "0600"
-  become: true
-
-- name: Create mount point directory
-  ansible.builtin.file:
-    path: "{{ (smb__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-  loop: "{{ smb__targets }}"
-  become: true
-
-- name: Copy mount template to host
-  ansible.builtin.template:
-    src: mountfile.mount.j2
-    dest: "{{ (path_systemd_unitfiles, \
-          (smb__mount_dir, (item.mount_point + mountfile_ext)) | ansible.builtin.path_join \
-          | regex_replace('^\/?(.*)$', '\\1') \
-          | ansible.builtin.split('/') | join('-')) \
-        | ansible.builtin.path_join }}"
-    mode: "0644"
-  loop: "{{ smb__targets }}"
-  become: true
-
-- name: Copy automount template to host
-  ansible.builtin.template:
-    src: mountfile.automount.j2
-    dest: "{{ (path_systemd_unitfiles, \
-          (smb__mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
-          | regex_replace('^\/?(.*)$', '\\1') \
-          | ansible.builtin.split('/') | join('-')) \
-        | ansible.builtin.path_join }}"
-    mode: "0644"
-  loop: "{{ smb__targets }}"
-  become: true
-
-- name: Enable automount service on host
-  ansible.builtin.systemd:
-    daemon-reload: true
-    name: "{{ (smb__mount_dir, (item.mount_point + automountfile_ext)) | ansible.builtin.path_join \
-          | regex_replace('^\/?(.*)$', '\\1') \
-          | ansible.builtin.split('/') | join('-') }}"
-    state: started
-    enabled: true
-  loop: "{{ smb__targets }}"
-  become: true
+- name: Install SMB mount as temporary mount
+  ansible.builtin.import_tasks: mount_temp.yaml
+  when: smb__mount_temp
 
 ...

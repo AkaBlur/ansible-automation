@@ -1,4 +1,4 @@
-# Linux NFS Role
+# Linux SMB Role
 
 Setup role for deploying a mapped SMB share onto a host
 
@@ -7,8 +7,9 @@ Setup role for deploying a mapped SMB share onto a host
 Will create a mount directory where a given set of SMB shares can be mapped
 into.
 
-The shares are mounted via a `serviced` entry so that they will persist
-reboots.
+Default behavior mounts the shares via a `serviced` entry so that they will
+persist reboots. An optional switch **`smb__mount_temp`** will mount them
+as ephemeral shares onto the host.
 
 ## Default Vars
 
@@ -18,6 +19,14 @@ smb__pass: password
 ```
 - Default credentials for the SMB user
 - Will be stored as `root`-protected file on the host
+
+---
+
+```yaml
+smb__mount_temp: false
+```
+- Will mount the share as ephemeral mount
+- Only connects the share, will be gone after reboot
 
 ---
 

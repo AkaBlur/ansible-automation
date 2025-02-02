@@ -1,0 +1,15 @@
+---
+
+- name: Create temporary mount
+  ansible.posix.mount:
+    src: "{{ ('//', smb__server_name, item.share_name) | ansible.builtin.path_join }}"
+    path: "{{ (smb__mount_dir, item.mount_point) | ansible.builtin.path_join }}"
+    opts: "_netdev,{{ smb__perms }},uid={{ smb__uid }},gid={{ smb__gid }},\
+      iocharset={{ smb__charset }},username={{ smb__user }},\
+      password={{ smb__pass }},noserverino,sfu,mfsymlinks"
+    fstype: cifs
+    state: ephemeral
+  loop: "{{ smb__targets }}"
+  become: true
+
+...
