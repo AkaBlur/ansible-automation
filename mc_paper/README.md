@@ -1,10 +1,10 @@
-# Minecraft Role
+# Minecraft Paper Role
 
-Role to deploy a Minecraft Vanilla server instance onto a given host
+Role to deploy a Minecraft Paper server instance onto a given host
 
 ## Overview
 
-Deploys and manages a Minecraft Vanilla instance on a given host.
+Deploys and manages a Minecraft Paper instance on a given host.
 Several different methods allow the remote control of the instance. Those
 include:
 
@@ -68,6 +68,8 @@ mc__openjdk_version:
 mc__accept_eula:
 mc__password_hashed:
 mc__mc_target_version:
+mc__prepare_velocity_backend:
+mc__velocity_shared_secret:
 mc__ramsize_min_init:
 mc__ramsize_max:
 mc__option_difficulty:
@@ -89,12 +91,17 @@ to the `server.properties` settings of the server.
 When deploying some simple server settings can be made with the provided
 variables.
 
-The server will be under the control of a separate user `minecraft`. In its home
-a dedicated `mc_server` will contain the server files. 
+The server will be under the control of a separate user `mcpaper`. In its home
+a dedicated `mc_paper_server` will contain the server files. 
+
+When enabling `mc__prepare_velocity_backend` the server will be setup for a
+**Velocity Proxy**. This will put the server into **offline mode!** In that case
+a shared secret is needed to ensure secured communication between the server and
+the proxy.
 
 **Manual Control**
 
-In the home directory of the `minecraft` user is a script deployed for manual
+In the home directory of the `mcpaper` user is a script deployed for manual
 control of the server: `mc_server_control.sh`.
 
 It allows manual start, stop and messaging. For ease of use all running
@@ -113,7 +120,7 @@ No additional variables needed if the role detects the managed Minecraft
 instance.
 
 **Start**, **Stop** and **Restart** will always create a screen instance (or
-shutdown) within the user `minecraft` session.
+shutdown) within the user `mcpaper` session.
 
 ### Check Update, Apply Update
 
@@ -140,6 +147,12 @@ that sends a message to the Bot about a new version that can be deployed.
 When updating the server will safely power-cycle and apply the update. Checking
 for updates won't apply updates on its own.
 
+With Minecraft Paper an additional check is performed for an update of Paper
+itself (also for the same Minecraft version). This will also notify the user
+but only once!
+
+Applying an update will always get the latest build of Paper.
+
 ### Saving, Copy to backup
 
 **Switches**
@@ -156,7 +169,7 @@ mc__copy_gid: 1000
 ```
 
 This option will power-cycle the server and save the world as `.tar.gz` archive
-into the `minecraft` users home directory.
+into the `mcpaper` users home directory.
 
 Optionally a copy operation can also be appended to copy the archive to a given
 location **on the host**. This can be also some mapped network share for remote
@@ -164,7 +177,7 @@ storage.
 
 **Manual control**
 
-The server save script `mc_server_save_world.sh` inside the `minecraft` users
+The server save script `mc_server_save_world.sh` inside the `mcpaper` users
 home directory can be called manually and will create an archive of the current
 servers world.
 

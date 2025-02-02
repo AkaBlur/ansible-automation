@@ -24,6 +24,8 @@ mc_velocity__proxy_max_ram: 512M
 # can either be 'latest' or a specific version (e.g. 340-SNAPSHOT)
 mc_velocity__target_version: latest
 
+#[ ]: Include options for configuration inside role
+#HACK: Needs some form of configuration for TOML as Velocity uses it instead of YAML
 # Velocity related options for the proxy
 # Port to run the proxy on
 mc_velocity__option_server_port: 25565
