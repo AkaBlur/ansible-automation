@@ -2,14 +2,7 @@
 
 - name: Setting up network shares for VM instances
   hosts: "{{ vm_hosts | default([]) }}"
-
   roles:
     - role: smb_setup
-      vars:
-        smb__user: "{{ smb_user | default([]) }}"
-        smb__pass: "{{ smb_pass | default([]) }}"
-        smb__mount_dir: "{{ smb_mountdir | default([]) }}"
-        smb__server_name: "{{ smb_servername | default([]) }}"
-        smb__targets: "{{ smb_targets | default([]) }}"
 
 ...

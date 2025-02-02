@@ -2,17 +2,17 @@
 
 - name: Disable default stub listener from systemd-resolved
   become: true
-  hosts: "{{ vm_hosts }}"
+  hosts: "{{ vm_hosts | default([]) }}"
   tasks:
     - name: Service infos
       ansible.builtin.service_facts:
 
-    - name: systemd-resolved present
+    - name: Is systemd-resolved present
       ansible.builtin.fail:
         msg: systemd-resolved.service not present!
       when: "'systemd-resolved.service' not in services"
 
-    - name: systemd-resolved running
+    - name: Is systemd-resolved running
       ansible.builtin.fail:
         msg: systemd-resolved.service not running!
       when: "services['systemd-resolved.service'].state != 'running'"

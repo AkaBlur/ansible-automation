@@ -1,7 +1,7 @@
 ---
 
 - name: Setup Host with Emby server
-  hosts: testingvms
+  hosts: "{{ vm_hosts | default([]) }}"
   pre_tasks:
     - name: Get latest Emby server version
       ansible.builtin.script: emby/emby_get_latest_server.py
