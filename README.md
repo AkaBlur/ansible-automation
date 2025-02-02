@@ -35,3 +35,16 @@ Control tasks for complex role setups:
 - Manage a Minecraft Paper Server instance
 - Deploy NFS network shares
 - Deploy SMB network shares
+
+## Dev
+### Prerequisites
+- Python (>= 3.11)
+- Installed `requirements.txt`
+- Installed Ansible Galaxy roles inside [roles/requirements.yml](roles/requirements.yml)
+
+### Util
+**ansible_gen_hashed_pw.sh**
+
+- Generates a hashed password
+- For usage inside roles for hashed pw values when deploying new users
+
