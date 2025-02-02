@@ -15,6 +15,8 @@ Roles dedicated for complex tasks.
 - [SMB-Share Deployment](smb_setup/README.md)
 - [Steam Game Server Deployment](steam_server/README.md)
 - [Minecraft Game Server](mc_vanilla/README.md)
+- [Minecraft Paper Game Server](mc_paper/README.md)
+- [Minecraft Velocity Proxy Server](mc_velocity/README.md)
 
 ## Task Setups
 
