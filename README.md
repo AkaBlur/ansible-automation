@@ -14,6 +14,7 @@ Roles dedicated for complex tasks.
 - [NFS-Share Deployment](nfs_setup/README.md)
 - [SMB-Share Deployment](smb_setup/README.md)
 - [Steam Game Server Deployment](steam_server/README.md)
+- [Minecraft Game Server](mc_vanilla/README.md)
 
 ## Task Setups
 
