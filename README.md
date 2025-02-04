@@ -17,6 +17,7 @@ Roles dedicated for complex tasks:
 - [Minecraft Game Server](mc_vanilla/README.md)
 - [Minecraft Paper Game Server](mc_paper/README.md)
 - [Minecraft Velocity Proxy Server](mc_velocity/README.md)
+- [Cronjob Setup](cron_job/README.md)
 
 ## Task Setups
 
@@ -40,6 +41,7 @@ Each role has its own variables. See their references for those.
 - Manage a Minecraft Paper Server instance
 - Deploy NFS network shares
 - Deploy SMB network shares
+- Install a crontab via a control file
 
 ---
 
@@ -92,39 +94,6 @@ Unbound needs an access control list. This is specified in l3d's
 
 ```yaml
 unbound_access_allow: ...
-```
-
-### Cronjob setup
-The cronjob setup expects a specified cronjob file on the host that acts as
-cron facts storage. This is encoded as JSON.
-
-The following variables can be set inside the control file:
-- `cron_minute`
-- `cron_hour`
-- `cron_day`
-- `cron_month`
-- `cron_weekday`
-
-Example:
-```json
-{
-    "cron_minute": "20",
-    "cron_hour": "4"
-}
-```
-
-This will output `20 4 * * *` inside the crontab entry. When nothing is
-supplied for given variable **\* is assumed!**
-
-Further settings include the user the cronjob gets installed, an internally
-referenced name (for Ansible) and the command to execute.
-
-**Vars**
-```yaml
-cronfile: "/file/on/host.something"
-cron_description: "My cronjob"
-cron_job: "echo 'Meddl Loide' > /dev/null"
-cron_user: "root"
 ```
 
 ## Dev
