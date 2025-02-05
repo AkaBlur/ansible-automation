@@ -23,15 +23,11 @@
         password: "{{ automation_user_pw_hash }}"
       when: automation_user != "root"
 
-    - name: Install Python
+    - name: Install necessary packages
       ansible.builtin.package:
-        name: python3
+        name: "{{ item }}"
         state: present
-
-    - name: Install Python virtual environment support
-      ansible.builtin.package:
-        name: python3-venv
-        state: present
+      loop: "{{ automation_dependencies }}"
 
   post_tasks:
     - name: Get users home directory

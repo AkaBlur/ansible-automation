@@ -106,13 +106,17 @@ unbound_access_allow: ...
 ### Python Automation Deploy
 Deploys an automated Python script to the host with supported crontab entry.
 Besides the cron and SMB setup roles only the automation user needs to be
-specified.
+specified. Additionally a list of necessary packages can be supplied as well.
 
 **Vars**
 ```yaml
 automation_user:
 automation_user_group:
 automation_user_pw_hash:
+automation_dependencies:
+  - package_1
+  - package_2
+  - ...
 ```
 
 ## Dev
