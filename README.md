@@ -7,6 +7,11 @@ for managing several different applications inside my Homelab.
 
 Feel free to explore some of them.
 
+> [!WARNING]
+> Many of those roles and tasks may only support Ubuntu / Debian-based distros!
+> 
+> Others are not tested by me.
+
 ## Roles
 
 Roles dedicated for complex tasks:
@@ -30,6 +35,7 @@ Roles dedicated for complex tasks:
 - Deploy an [unbound](https://www.nlnetlabs.nl/projects/unbound/about/) instance
 - Update `apt` packages
 - Install cronjobs
+- Deploy automated Python scripts
 
 ---
 
@@ -92,8 +98,21 @@ Unbound needs an access control list. This is specified in l3d's
 [repository](https://github.com/roles-ansible/ansible_role_unbound) under
 `unbound_access_control`
 
+**Vars**
 ```yaml
 unbound_access_allow: ...
+```
+
+### Python Automation Deploy
+Deploys an automated Python script to the host with supported crontab entry.
+Besides the cron and SMB setup roles only the automation user needs to be
+specified.
+
+**Vars**
+```yaml
+automation_user:
+automation_user_group:
+automation_user_pw_hash:
 ```
 
 ## Dev

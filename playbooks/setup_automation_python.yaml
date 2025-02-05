@@ -1,0 +1,62 @@
+---
+
+- name: Deploy automation script
+  become: true
+  hosts: "{{ vm_hosts | default([]) }}"
+
+  roles:
+    - role: smb_setup
+      vars:
+        smb__mount_temp: true
+
+    - role: cron_job
+      vars:
+        cron_cronfile: "{{ (smb__mount_dir, smb__targets[0].mount_point, 'crontab.json') | ansible.builtin.path_join }}"
+
+  pre_tasks:
+    - name: Supply automation user
+      ansible.builtin.user:
+        name: "{{ automation_user }}"
+        groups: users
+        create_home: true
+        shell: /bin/bash
+        password: "{{ automation_user_pw_hash }}"
+      when: automation_user != "root"
+
+    - name: Install Python
+      ansible.builtin.package:
+        name: python3
+        state: present
+
+    - name: Install Python virtual environment support
+      ansible.builtin.package:
+        name: python3-venv
+        state: present
+
+  post_tasks:
+    - name: Get users home directory
+      ansible.builtin.set_fact:
+        fact_install_home: "{{ ('/home', automation_user) | ansible.builtin.path_join }}"
+      when: automation_user != "root"
+
+    - name: Get root directory
+      ansible.builtin.set_fact:
+        fact_install_home: "/root"
+      when: automation_user == "root"
+
+    - name: Copy automation environment onto host
+      ansible.builtin.copy:
+        src: "{{ (smb__mount_dir, smb__targets[0].mount_point) | ansible.builtin.path_join }}"
+        dest: "{{ fact_install_home }}"
+        owner: "{{ automation_user }}"
+        group: "{{ automation_user_group }}"
+        mode: '0755'
+        remote_src: true
+
+    - name: Install Python virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv .venv"
+        chdir: "{{ (fact_install_home, smb__targets[0].mount_point) | ansible.builtin.path_join }}"
+        creates: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv', 'bin', 'python3') | ansible.builtin.path_join }}"
+
+...
