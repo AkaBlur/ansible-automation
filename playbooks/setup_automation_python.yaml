@@ -53,7 +53,7 @@
       ansible.builtin.pip:
         requirements: "{{ (fact_install_home, smb__targets[0].mount_point, 'requirements.txt') | ansible.builtin.path_join }}"
         virtualenv: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv') | ansible.builtin.path_join }}"
-        virtualenv_command: "-m venv"
+        virtualenv_command: "python3 -m venv"
       when: automation_install_pyvenv
 
 ...
