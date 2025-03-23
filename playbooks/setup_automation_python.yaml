@@ -17,6 +17,7 @@
     - name: Supply automation user
       ansible.builtin.user:
         name: "{{ automation_user }}"
+        group: "{{ automation_user }}"
         groups: users
         create_home: true
         shell: /bin/bash
@@ -33,13 +34,13 @@
     - name: Get users home directory and group
       ansible.builtin.set_fact:
         fact_install_home: "{{ ('/home', automation_user) | ansible.builtin.path_join }}"
-        fact_user_group: users
+        fact_user_group: "{{ automation_user }}"
       when: automation_user != "root"
 
     - name: Get root directory
       ansible.builtin.set_fact:
         fact_install_home: "/root"
-        fact_user_group: root
+        fact_user_group: "root"
       when: automation_user == "root"
 
     - name: Copy automation environment onto host
