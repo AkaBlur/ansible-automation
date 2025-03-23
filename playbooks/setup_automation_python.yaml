@@ -50,9 +50,9 @@
         remote_src: true
 
     - name: Install Python virtual environment
-      ansible.builtin.command:
-        cmd: "python3 -m venv .venv"
-        chdir: "{{ (fact_install_home, smb__targets[0].mount_point) | ansible.builtin.path_join }}"
-        creates: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv', 'bin', 'python3') | ansible.builtin.path_join }}"
+      ansible.builtin.pip:
+        requirements: "{{ (fact_install_home, smb__targets[0].mount_point, 'requirements.txt') | ansible.builtin.path_join }}"
+        virtualenv: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv') | ansible.builtin.path_join }}"
+      when: automation_install_pyvenv
 
 ...

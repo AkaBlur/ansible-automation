@@ -106,7 +106,9 @@ unbound_access_allow: ...
 ### Python Automation Deploy
 Deploys an automated Python script to the host with supported crontab entry.
 Besides the cron and SMB setup roles only the automation user needs to be
-specified. Additionally a list of necessary packages can be supplied as well.
+specified. Additionally a list of necessary packages (package manager) can
+be supplied as well. Furthermore a python virtual environment can be created,
+which needs a `requirements.txt` file for pip to install requirements.
 
 **Vars**
 ```yaml
@@ -117,6 +119,7 @@ automation_dependencies:
   - package_1
   - package_2
   - ...
+automation_install_pyvenv:
 ```
 
 ## Dev
