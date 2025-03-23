@@ -30,14 +30,16 @@
       loop: "{{ automation_dependencies }}"
 
   post_tasks:
-    - name: Get users home directory
+    - name: Get users home directory and group
       ansible.builtin.set_fact:
         fact_install_home: "{{ ('/home', automation_user) | ansible.builtin.path_join }}"
+        fact_user_group: users
       when: automation_user != "root"
 
     - name: Get root directory
       ansible.builtin.set_fact:
         fact_install_home: "/root"
+        fact_user_group: root
       when: automation_user == "root"
 
     - name: Copy automation environment onto host
@@ -55,5 +57,13 @@
         virtualenv: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv') | ansible.builtin.path_join }}"
         virtualenv_command: "python3 -m venv"
       when: automation_install_pyvenv
+
+    - name: Ensure ownership of Python virtual environment
+      ansible.builtin.file:
+        path: "{{ (fact_install_home, smb__targets[0].mount_point, '.venv') | ansible.builtin.path_join }}"
+        state: directory
+        recurse: true
+        owner: "{{ automation_user }}"
+        group: "{{ fact_user_group }}"
 
 ...
