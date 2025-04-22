@@ -1,0 +1,14 @@
+---
+
+- name: Create Server configuration backup
+  become: true
+  community.general.archive:
+    path: "{{ plex__conf_dir_server }}"
+    dest: "{{ (plex__backup_directory, plex__backup_filename) | ansible.builtin.path_join }}"
+    format: "{{ plex__backup_comp_format }}"
+    force_archive: true
+    owner: "{{ plex__backup_user }}"
+    group: "{{ plex__backup_group }}"
+    mode: 0644
+
+...

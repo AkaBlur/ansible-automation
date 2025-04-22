@@ -1,0 +1,13 @@
+---
+
+# Run Backup creation of Plex configuration
+plex__do_backup: false
+
+# Backup directory for Plex configuration
+plex__backup_directory: /media/backup/plex
+
+# Backup user identification
+plex__backup_user: plex
+plex__backup_group: plex
+
+...

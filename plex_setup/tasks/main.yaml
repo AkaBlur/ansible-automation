@@ -1,0 +1,8 @@
+---
+
+# tasks for Plex media server setup
+- name: Backup Plex config
+  ansible.builtin.include_tasks: do_backup.yaml
+  when: plex__do_backup
+
+...

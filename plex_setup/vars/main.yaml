@@ -1,0 +1,8 @@
+---
+
+plex__conf_dir_server: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server"
+
+plex__backup_filename: PMS.tar.gz
+plex__backup_comp_format: gz
+
+...
