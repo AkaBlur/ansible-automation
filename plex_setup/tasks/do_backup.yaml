@@ -9,6 +9,6 @@
     force_archive: true
     owner: "{{ plex__backup_user }}"
     group: "{{ plex__backup_group }}"
-    mode: 0644
+    mode: "0644"
 
 ...

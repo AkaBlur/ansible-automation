@@ -1,0 +1,9 @@
+---
+
+- name: Prepare host system
+  ansible.builtin.include_tasks: installation/00_prepare_host.yaml
+
+- name: Install Plex server
+  ansible.builtin.include_tasks: installation/01_install.yaml
+
+...

@@ -1,0 +1,42 @@
+---
+
+- name: Get latest Plex server package
+  ansible.builtin.script: >
+    plex_download_version.py 
+    --platform "{{ plex__install_platform }}"
+    --arch "{{ plex__install_architecture }}"
+    --distro "{{ plex__install_distro }}"
+  args:
+    executable: python3
+  register: plex_server_download
+
+- name: Download latest Plex server
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ plex_server_download.stdout_lines[0] }}"
+    dest: "{{ ('/home', plex__install_user) | ansible.builtin.path_join }}"
+    owner: "{{ plex__install_user }}"
+    group: "{{ plex__install_group }}"
+    mode: "0755"
+  register: plex_download
+
+- name: Install Plex server (deb)
+  become: true
+  ansible.builtin.apt:
+    deb: "{{ plex_download.dest }}"
+  when: ansible_os_family == "Debian"
+
+- name: Install Plex server (rpm)
+  become: true
+  community.general.apt_rpm:
+    pkg: "{{ plex_download.dest }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Remove installation file
+  become: true
+  ansible.builtin.file:
+    path: "{{ plex_download.dest }}"
+    state: absent
+
+...

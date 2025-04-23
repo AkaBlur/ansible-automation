@@ -1,0 +1,51 @@
+---
+
+- name: Remove old save state
+  become: true
+  ansible.builtin.file:
+    path: "{{ (plex__conf_dir, 'PMS.old.d') | ansible.builtin.path_join }}"
+    state: absent
+
+- name: Save current configuration directory
+  become: true
+  ansible.builtin.copy:
+    src: "{{ plex__conf_dir_server }}"
+    dest: "{{ (plex__conf_dir, 'PMS.old.d') | ansible.builtin.path_join }}"
+    remote_src: true
+    owner: "{{ plex__install_user }}"
+    group: "{{ plex__install_group }}"
+    mode: "0755"
+
+- name: Remove current configuration directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ plex__conf_dir_server }}"
+    state: absent
+
+- name: Copy backup file onto host
+  become: true
+  ansible.builtin.copy:
+    src: "{{ (plex__backup_directory, plex__backup_filename) | ansible.builtin.path_join }}"
+    dest: "{{ plex__conf_dir }}"
+    remote_src: true
+    owner: "{{ plex__install_user }}"
+    group: "{{ plex__install_group }}"
+    mode: "0755"
+
+- name: Extract backup archive
+  become: true
+  ansible.builtin.unarchive:
+    src: "{{ (plex__conf_dir, plex__backup_filename) | ansible.builtin.path_join }}"
+    dest: "{{ plex__conf_dir }}"
+    remote_src: true
+    owner: "{{ plex__install_user }}"
+    group: "{{ plex__install_group }}"
+    mode: "0755"
+
+- name: Remove backup from host
+  become: true
+  ansible.builtin.file:
+    path: "{{ (plex__conf_dir, plex__backup_filename) | ansible.builtin.path_join }}"
+    state: absent
+
+...

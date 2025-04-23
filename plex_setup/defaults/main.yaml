@@ -1,11 +1,21 @@
 ---
 
+# Install Plex server
+plex__do_install: false
 # Run Backup creation of Plex configuration
 plex__do_backup: false
+# Restore Plex backup on host
+plex__do_backup_restore: false
+
+# Plex user configuration
+plex__install_user_password_hashed: XXXXXXX
+# Plex installation configuration
+plex__install_platform: Linux
+plex__install_architecture: x86_64
+plex__install_distro: debian
 
 # Backup directory for Plex configuration
 plex__backup_directory: /media/backup/plex
-
 # Backup user identification
 plex__backup_user: plex
 plex__backup_group: plex

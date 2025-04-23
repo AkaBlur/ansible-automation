@@ -1,6 +1,10 @@
 ---
 
-plex__conf_dir_server: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server"
+plex__conf_dir: "/var/lib/plexmediaserver/Library/Application Support"
+plex__conf_dir_server: "{{ (plex__conf_dir, 'Plex Media Server') | ansible.builtin.path_join }}"
+
+plex__install_user: plex
+plex__install_group: plex
 
 plex__backup_filename: PMS.tar.gz
 plex__backup_comp_format: gz
