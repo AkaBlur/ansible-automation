@@ -23,6 +23,7 @@ Roles dedicated for complex tasks:
 - [Minecraft Paper Game Server](mc_paper/README.md)
 - [Minecraft Velocity Proxy Server](mc_velocity/README.md)
 - [Cronjob Setup](cron_job/README.md)
+- [Plex Media Server Setup](plex_setup/README.md)
 
 ## Task Setups
 
@@ -48,6 +49,7 @@ Each role has its own variables. See their references for those.
 - Deploy NFS network shares
 - Deploy SMB network shares
 - Install a crontab via a control file
+- Manage a Plex Media Server instance
 
 ---
 
