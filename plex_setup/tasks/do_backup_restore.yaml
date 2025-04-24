@@ -1,5 +1,11 @@
 ---
 
+- name: Ensure stopped Plex service
+  become: true
+  ansible.builtin.service:
+    name: plexmediaserver.service
+    state: stopped
+
 - name: Remove old save state
   become: true
   ansible.builtin.file:

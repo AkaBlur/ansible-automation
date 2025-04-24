@@ -1,5 +1,11 @@
 ---
 
+- name: Stop Plex service
+  become: true
+  ansible.builtin.service:
+    name: plexmediaserver.service
+    state: stopped
+
 - name: Create Server configuration backup
   become: true
   community.general.archive:
@@ -10,5 +16,11 @@
     owner: "{{ plex__backup_user }}"
     group: "{{ plex__backup_group }}"
     mode: "0644"
+
+- name: Start Plex service
+  become: true
+  ansible.builtin.service:
+    name: plexmediaserver.service
+    state: started
 
 ...
