@@ -3,5 +3,6 @@
 roles:
   - name: l3d.unbound
   - name: kwoodson.yedit
+  - name: geerlingguy.docker
 
 ...

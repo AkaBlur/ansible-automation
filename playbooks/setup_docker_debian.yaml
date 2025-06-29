@@ -1,0 +1,18 @@
+---
+
+- name: Deploy Docker installation for Debian-based systems
+  become: true
+  hosts: "{{ vm_hosts | default([]) }}"
+
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_obsolete_packages:
+          - docker.io
+          - docker-compose
+          - docker-doc
+          - podman-docker
+        docker_users:
+          - "{{ ansible_user }}"
+
+...

@@ -1,0 +1,55 @@
+---
+
+- name: Setup a Gitea runner instance using Docker on host
+  become: true
+  hosts: "{{ vm_hosts | default([]) }}"
+
+  tasks:
+    - name: Ensure runner user
+      ansible.builtin.user:
+        name: "{{ gitea_runner_user }}"
+        group: "{{ gitea_runner_user }}"
+        groups: docker
+        create_home: true
+        shell: /bin/bash
+        password: "{{ gitea_runner_pass }}"
+
+    - name: Check for runner directory
+      ansible.builtin.file:
+        path: "{{ ('/home', gitea_runner_user, 'gitea_runner') | ansible.builtin.path_join }}"
+        state: directory
+        owner: "{{ gitea_runner_user }}"
+        group: "{{ gitea_runner_user }}"
+        mode: '0755'
+
+    # basic configuration usable
+    - name: Check for runner configuration
+      ansible.builtin.shell:
+        cmd: docker run --entrypoint="" --rm -it docker.io/gitea/act_runner:latest act_runner generate-config > config.yaml
+        chdir: "{{ ('/home', gitea_runner_user, 'gitea_runner') | ansible.builtin.path_join }}"
+        creates: config.yaml
+
+    - name: Runner data directory
+      ansible.builtin.file:
+        path: "{{ ('home', gitea_runner_user, 'gitea_runner', 'data') | ansible.builtin.path_join }}"
+        state: directory
+        owner: "{{ gitea_runner_user }}"
+        group: "{{ gitea_runner_user }}"
+        mode: "0755"
+
+    - name: Install Docker run script
+      ansible.builtin.template:
+        src: gitea/docker_run.sh.j2
+        dest: "{{ ('/home', gitea_runner_user, 'gitea_runner', 'docker_run.sh') | ansible.builtin.path_join }}"
+        owner: "{{ gitea_runner_user }}"
+        group: "{{ gitea_runner_user }}"
+        mode: "0755"
+
+    - name: Install cronjob to start runner
+      ansible.builtin.cron:
+        name: "Gitea runner instance"
+        user: "{{ gitea_runner_user }}"
+        job: "cd {{ ('/home', gitea_runner_user, 'gitea_runner') | ansible.builtin.path_join }} && ./docker_run.sh > cron.log 2>&1"
+        special_time: "reboot"
+
+...

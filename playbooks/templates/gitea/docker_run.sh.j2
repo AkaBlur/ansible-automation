@@ -1,0 +1,22 @@
+#!/bin/bash
+
+DOCKER_CONTAINER=$(docker ps -a --format "{{ '{{' }}.Names{{ '}}' }}" | tail -n 1)
+DOCKER_CONTAINER_NAME="gitea_runner_{{ gitea_runner_name }}"
+
+if [ ${DOCKER_CONTAINER} == ${DOCKER_CONTAINER_NAME} ]; then
+    docker start ${DOCKER_CONTAINER_NAME}
+
+else
+    docker run -itd \
+    -v $PWD/config.yaml:/config.yaml \
+    -v $PWD/data:/data \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e CONFIG_FILE=/config.yaml \
+    -e GITEA_INSTANCE_URL="{{ gitea_address }}" \
+    -e GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_token }}" \
+    -e GITEA_RUNNER_NAME="{{ gitea_runner_name }}" \
+    --name ${DOCKER_CONTAINER_NAME} \
+    -d docker.io/gitea/act_runner:latest
+
+fi
+

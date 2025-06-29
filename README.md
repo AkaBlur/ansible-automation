@@ -37,6 +37,7 @@ Roles dedicated for complex tasks:
 - Update `apt` packages
 - Install cronjobs
 - Deploy automated Python scripts
+- Deploy a Gitea runner instance (Docker runner)
 
 ---
 
@@ -58,6 +59,7 @@ Each role has its own variables. See their references for those.
 Generally (also for my personal Ansible Semaphore setup) hosts will be passed
 via the variable `vm_hosts`. This defaults to an empty list. It can be supplied
 via the `-e` switch
+
 ```bash
 ansible-playbook -K some_tasks.yaml -e vm_hosts=myhostgroup
 ```
@@ -65,11 +67,13 @@ ansible-playbook -K some_tasks.yaml -e vm_hosts=myhostgroup
 Further defined are special variables for simpler tasks setups that can be set:
 
 ### Firewall Setup
+
 Requires a list of allowed ports, rules and protocols defined.
 
 For the general policy a value is needed.
 
 **Vars**
+
 ```yaml
 fw_allow:
   - { port: 420, rule: allow, proto: tcp }
@@ -78,6 +82,7 @@ fw_rule_general: deny
 ```
 
 ### Timezone Setup
+
 The timezone setup requires the timezone string.
 
 **Vars**
@@ -86,26 +91,31 @@ timezone_string: "Europe/Berlin"
 ```
 
 ### Apt Update control
+
 The apt updater needs a Telegram Bot token to notify the user. Yes, this is
 hardcoded 😎.
 
 **Vars**
+
 ```yaml
 telegram_api_token:
 telegram_chat_id: 
 ```
 
 ### Unbound
+
 Unbound needs an access control list. This is specified in l3d's
 [repository](https://github.com/roles-ansible/ansible_role_unbound) under
 `unbound_access_control`
 
 **Vars**
+
 ```yaml
 unbound_access_allow: ...
 ```
 
 ### Python Automation Deploy
+
 Deploys an automated Python script to the host with supported crontab entry.
 Besides the cron and SMB setup roles only the automation user needs to be
 specified. Additionally a list of necessary packages (package manager) can
@@ -113,6 +123,7 @@ be supplied as well. Furthermore a python virtual environment can be created,
 which needs a `requirements.txt` file for pip to install requirements.
 
 **Vars**
+
 ```yaml
 automation_user:
 automation_user_group:
@@ -124,13 +135,39 @@ automation_dependencies:
 automation_install_pyvenv:
 ```
 
+### Gitea runner deployment
+
+Deploys a Gitea runner on the host machine. The runner is the default Gitea
+Docker runner to enable task execution on the host.
+
+Configuration is currently set to the default runner config
+(runs `ubuntu` tasks).
+
+**Vars**
+```yaml
+gitea_address:
+gitea_runner_token:
+gitea_runner_name:
+gitea_runner_user:
+gitea_runner_pass:
+```
+
+Server address must be entered via `gitea_address`, may be FQDN or some sort of
+IP address. Runner token must be specified for Gitea to detect the runner.
+
+Runner labels will be the default `ubuntu-*` ones.
+
+User password must be a hashed password.
+
 ## Dev
 ### Prerequisites
+
 - Python (>= 3.11)
 - Installed `requirements.txt`
 - Installed Ansible Galaxy roles inside [roles/requirements.yml](roles/requirements.yml)
 
 ### Util
+
 **ansible_gen_hashed_pw.sh**
 
 - Generates a hashed password
