@@ -31,13 +31,14 @@ Roles dedicated for complex tasks:
 
 - Disable `resolved` stub listener (default on Ubuntu, listens on port 53)
 - Deploy an [emby](https://emby.media/) server instance
-- Firewall control (via UFW)
-- Timezone settings
-- Deploy an [unbound](https://www.nlnetlabs.nl/projects/unbound/about/) instance
-- Update `apt` packages
+- [👇](#firewall-setup) Firewall control (via UFW)
+- [👇](#timezone-setup) Timezone settings
+- [👇](#unbound) Deploy an [unbound](https://www.nlnetlabs.nl/projects/unbound/about/) instance
+- [👇](#apt-update-control) Update `apt` packages
 - Install cronjobs
-- Deploy automated Python scripts
-- Deploy a Gitea runner instance (Docker runner)
+- [👇](#python-automation-deploy) Deploy automated Python scripts
+- [👇](#gitea-runner-deployment) Deploy a Gitea runner instance (Docker runner)
+- Deploy Docker for a Debian-based host
 
 ---
 
@@ -51,6 +52,7 @@ Each role has its own variables. See their references for those.
 - Deploy SMB network shares
 - Install a crontab via a control file
 - Manage a Plex Media Server instance
+- Install a Steam game-server (manageable via script interface)
 
 ---
 
