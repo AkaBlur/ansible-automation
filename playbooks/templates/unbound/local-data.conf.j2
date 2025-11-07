@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+server:
+    # local-data entries for adding locally served DNS entries. As unbound
+    # serves a non-authoritative reverse DNS no CNAME/DNAME support is
+    # available without the configuration of a stub-zone.
+
+{% for entry in unbound__local_data %}
+    local-data: "{{ entry }}"
+{% endfor %}
